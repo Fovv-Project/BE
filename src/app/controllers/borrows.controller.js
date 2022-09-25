@@ -7,18 +7,6 @@ module.exports = {
 
     },
 
-    updateId : async (req, res, next) => {
-
-    },
-
-    updateIdApproval : async (req, res, next) => {
-
-    },
-
-    updateIdStatus : async (req, res, next) => {
-
-    },
-
     insert : async (req, res, next) => {
 
     },
