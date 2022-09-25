@@ -21,7 +21,10 @@
   },
   "homepage": "https://github.com/librarian-ilkom/BE#readme",
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.2.4"
   },
   "dependencies": {
     "dotenv": "^16.0.2"
