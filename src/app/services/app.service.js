@@ -1,16 +1,23 @@
 const fs = require('fs')
 const path = require('path')
+const express = require('express')
 
-module.exports = (app) => {
-    const routesPath = path.resolve(__dirname, '..', 'routes')
-    const routeFiles = fs.readdirSync(routesPath)
+module.exports = {
+    getRoutedApp : () => {
+
+        const app = express()
+        const routesPath = path.resolve(__dirname, '..', 'routes')    
+        
+        for (const routeFile of fs.readdirSync(routesPath)){     
+            
+            const {ext, name} = path.parse(routeFile)
+            const filePath = path.join(routesPath, name)
+            
+            if(ext == '.js')
+            app.use('/' + name.replace('.route', ''), require(filePath))       
+            
+        }
     
-    for (const routeFile of routeFiles){
-        const {ext, name} = path.parse(routeFile)
-        const filePath = path.join(routesPath, name)
-        
-        if(ext == '.js')
-        app.use('/' + name, require(filePath))
-        
-    }
+        return app
+    },
 }
