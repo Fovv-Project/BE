@@ -1,4 +1,5 @@
 module.exports = (req, res, next) => {
-    const req_url = req.originalUrl
-    console.log('Invoked at : ' + req_url)
+    const reqUrl = req.originalUrl
+    const reqMethod = req.method
+    console.log(`Invoked [ ${reqUrl} ] with [ ${reqMethod} ].`)
 }
