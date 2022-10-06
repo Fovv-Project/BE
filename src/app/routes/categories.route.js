@@ -6,7 +6,9 @@ router.use(require('../middlewares/logger.middleware'))
 
 /* Route */
 router.get('/')
-router.get('/:nim')
+router.get('/:id')
 router.post('/')
+router.patch('/:id')
+router.delete('/:id')
 
 module.exports = router
