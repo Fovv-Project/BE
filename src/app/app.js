@@ -1,5 +1,5 @@
 const dotenv = require('dotenv')
-const { getRoutedApp } = require('./services/app.service')
+const { getRoutedApp } = require('../utils/app.util')
 
 // Configure dotenv
 dotenv.config()
