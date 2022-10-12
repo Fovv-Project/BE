@@ -5,9 +5,17 @@ const router = express.Router()
 router.use(require('../middlewares/logger.middleware'))
 
 /* Routes */
-router.get('/')
-router.get('/:id')
-router.post('/')
-router.delete('/:id')
+router.get('/', [
+    require('../middlewares/auth.middleware'),
+])
+router.get('/:id', [
+    require('../middlewares/auth.middleware'),
+])
+router.post('/', [
+    require('../middlewares/auth.middleware'),
+])
+router.delete('/:id', [
+    require('../middlewares/auth.middleware'),
+])
 
 module.exports = router

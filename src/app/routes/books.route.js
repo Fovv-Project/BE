@@ -7,8 +7,15 @@ router.use(require('../middlewares/logger.middleware'))
 /* Routes */
 router.get('/')
 router.get('/:id')
-router.patch('/:id')
-router.post('/')
-router.delete('/')
+
+router.post('/', [
+    require('../middlewares/auth.middleware'),
+])
+router.patch('/:id', [
+    require('../middlewares/auth.middleware'),
+])
+router.delete('/', [
+    require('../middlewares/auth.middleware'),
+])
 
 module.exports = router
