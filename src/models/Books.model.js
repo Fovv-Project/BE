@@ -1,5 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require('../utils/database');
+const category = require('./categories.model');
+const borrow = require('./borrowingHistory.model');
 
 const Book = sequelize.define("book", {
     idBuku: DataTypes.STRING,
@@ -13,6 +15,9 @@ const Book = sequelize.define("book", {
     updatedAt: DataTypes.TIME,
     deletedAt: DataTypes.TIME
 });
+
+Book.belongsTo(category.Category);
+Book.hasMany(borrow.BorrowingHistory);
 
 module.exports = {
     Book

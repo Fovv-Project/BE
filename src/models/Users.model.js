@@ -1,7 +1,8 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
 const sequelize = require('../utils/database');
-const category = require('./Categories.model');
-const history = require('./BorrowingHistory.model');
+const category = require('./categories.model');
+const history = require('./borrowingHistory.model');
+const attendance = require('./attendances.model');
 
 const User = sequelize.define("user", {
     nim: DataTypes.STRING,
@@ -13,6 +14,7 @@ const User = sequelize.define("user", {
 
 User.hasMany(category.Category);
 User.hasMany(history.BorrowingHistory);
+User.hasMany(attendance.Attendance);
 
 module.exports = {
     User,

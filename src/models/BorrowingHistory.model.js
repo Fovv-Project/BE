@@ -1,5 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require('../utils/database');
+const user = require('./users.model');
+const book = require('./books.model');
 
 const BorrowingHistory = sequelize.define("borrowing_history", {
     idHistori: DataTypes.INTEGER,
@@ -8,6 +10,9 @@ const BorrowingHistory = sequelize.define("borrowing_history", {
     statusPinjam: DataTypes.STRING,
     isApproved: DataTypes.BOOLEAN
 });
+
+BorrowingHistory.belongsTo(user.User);
+BorrowingHistory.belongsTo(book.Book);
 
 module.exports = {
     BorrowingHistory
