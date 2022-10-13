@@ -11,7 +11,8 @@ module.exports = {
                 data: response
             });
         } catch (error) {
-            console.log(error.message);
+            return res.status(500).send(error.message);
+
         }
     },
 
@@ -31,7 +32,7 @@ module.exports = {
             });
 
         } catch (error) {
-            console.log(error.message);
+            return res.status(500).json({ error: error.message })
         }
     },
 
@@ -55,7 +56,7 @@ module.exports = {
             });
 
         } catch (error) {
-            console.log(error.message);
+            return res.status(500).json({ error: error.message })
         }
     },
 
@@ -66,13 +67,13 @@ module.exports = {
                     idKategori: req.params.idKategori
                 }
             });
-            res.status(200).json({
+            res.status(204).json({
                 success: true,
-                code: 200,
+                code: 204,
                 message: "Deleted category successfully",
             });
         } catch (error) {
-            console.log(error.message);
+            return res.status(500).send(error.message);
         }
     },
 }
