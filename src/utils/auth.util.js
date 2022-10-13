@@ -1,4 +1,4 @@
-const { isNumeric } = require('./aux.util')
+const { isNumeric } = require('./helper.util')
 
 module.exports = {
     
