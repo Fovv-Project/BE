@@ -3,7 +3,7 @@ const sequelize = require('../utils/database');
 const user = require('./users.model');
 const book = require('./books.model');
 
-const BorrowingHistory = sequelize.define("borrowing_history", {
+const BorrowingHistory = sequelize.define("borrowingHistory", {
     idHistori: DataTypes.INTEGER,
     tglPinjam: DataTypes.TIME,
     tglKembali: DataTypes.TIME,
