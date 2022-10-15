@@ -6,24 +6,25 @@ module.exports = async (req, res, next) => {
   
   const authHeader = req.headers['authorization']
   if(util.authHeaderIsInvalid(authHeader))
-    res.status(401).send("Invalid Authorization Header!")
+    res.status(401).json()
+    .send("Invalid Authorization Header.")
   
   const token = util.getToken(authHeader)
   let decodedToken
   try {
     decodedToken = await getAuth().verifyIdToken(token)
   }catch (err){
-    return res.status(401).send(err.message)
+    return res.sendStatus(401).send(err.message)
   }
 
-  const {email, access} = decodedToken
+  const {email, admin} = decodedToken
   if(util.emailIsInvalid(email))
-    res.status(401).send("Unauthorized Email Format!")  
-  if(access == undefined)
-    res.status(401).send("Unidentified Authorization!")
+    res.status(403).send("Unauthorized Email Format.")  
   
-  // Assuming CustomUserClaims is stored in "access" variable.
-  res.locals.access = access
-  next()
-
+    // Assuming CustomUserClaims is stored in "admin" variable.
+    if(admin == true)
+      res.locals.admin = true
+    
+    res.locals.userInfo = decodedToken
+    next()
 }
