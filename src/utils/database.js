@@ -6,4 +6,4 @@ const db = new Sequelize(`${process.env.POSTGRES_DATABASE}`, `${process.env.POST
     dialect: `${process.env.POSTGRES_CONNECTION}`
 });
 
-export default db;
+module.exports = db;
