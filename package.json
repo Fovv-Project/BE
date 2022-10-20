@@ -9,7 +9,8 @@
   "scripts": {
     "start": "nodemon src/app/app.js",
     "test": "mocha test/**/*.js",
-    "dev" : "docker compose up -d; sleep 2; node db.sync.js"
+    "migrate": "node-pg-migrate",
+    "dev": "docker compose down; docker compose up -d; sleep 2; npm run migrate up;"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,8 @@
     "chai": "^4.3.6",
     "mocha": "^10.0.0",
     "nodemon": "^2.0.20",
-    "supertest": "^6.2.4"
+    "supertest": "^6.2.4",
+    "node-pg-migrate": "^6.2.2"
   },
   "dependencies": {
     "dotenv": "^16.0.2",
