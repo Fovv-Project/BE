@@ -1,19 +1,28 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require('../utils/database');
-const user = require('./users.model');
-const book = require('./books.model');
 
-const BorrowingHistory = sequelize.define("borrowingHistory", {
-    idHistori: DataTypes.INTEGER,
-    tglPinjam: DataTypes.TIME,
-    tglKembali: DataTypes.TIME,
-    statusPinjam: DataTypes.STRING,
-    isApproved: DataTypes.BOOLEAN
-});
-
-BorrowingHistory.belongsTo(user.User);
-BorrowingHistory.belongsTo(book.Book);
-
-module.exports = {
-    BorrowingHistory
+module.exports = (sequelize) => {
+    sequelize.define("borrowingHistory", {
+        idHistori: {
+            allowNull: false,
+            primaryKey: true,
+            autoIncrement: true,
+            type: DataTypes.INTEGER
+        },
+        tglPinjam: {
+            allowNull: false,
+            type: DataTypes.TIME
+        },
+        tglKembali: {
+            allowNull: false,
+            type: DataTypes.TIME
+        },
+        statusPinjam: {
+            allowNull: false,
+            type: DataTypes.STRING
+        },
+        isApproved: {
+            allowNull: false,
+            type: DataTypes.BOOLEAN
+        }
+    });
 }
