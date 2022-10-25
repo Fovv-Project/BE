@@ -30,7 +30,7 @@ module.exports = {
 
     insert: async(req, res, next) => {
         try {
-            return res.send(req.body)
+            const jenisKategori = req.body.jenisKategori
             const response = await category.create({
                 jenisKategori: jenisKategori
             });
