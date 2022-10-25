@@ -55,6 +55,18 @@ exports.up = pgm => {
             jenisKategori: {
                 type: 'varchar(255)',
                 notNull: true,
+            },
+            createdAt: {
+                type: pgm.func('current_timestamp'),
+                notNull: false
+            },
+            updatedAt: {
+                type: pgm.func('current_timestamp'),
+                notNull: false
+            },
+            deletedAt: {
+                type: 'timestamp',
+                notNull: false
             }
         }),
         pgm.createTable('books', {
@@ -141,6 +153,18 @@ exports.up = pgm => {
                 type: 'boolean',
                 notNull: true
             },
+            createdAt: {
+                type: pgm.func('current_timestamp'),
+                notNull: false
+            },
+            updatedAt: {
+                type: pgm.func('current_timestamp'),
+                notNull: false
+            },
+            deletedAt: {
+                type: 'timestamp',
+                notNull: false
+            }
         }),
         pgm.addConstraint('borrowingHistory', 'nim', {
             foreignKeys: {
