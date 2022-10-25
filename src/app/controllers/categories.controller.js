@@ -12,7 +12,7 @@ module.exports = {
 
         try {
             const response = await category.findAll();
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 code: 200,
                 message: "Get category record successfully",
@@ -36,7 +36,7 @@ module.exports = {
                 'jenisKategori': jenisKategori
             });
 
-            res.status(201).json({
+            return res.status(201).json({
                 success: true,
                 code: 201,
                 message: "Create new category record successfully",
@@ -64,7 +64,7 @@ module.exports = {
                 }
             });
 
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 code: 200,
                 message: "Updated category successfully",
@@ -87,7 +87,7 @@ module.exports = {
                     idKategori: req.params.idKategori
                 }
             });
-            res.status(204).json({
+            return res.status(204).json({
                 success: true,
                 code: 204,
                 message: "Deleted category successfully",
