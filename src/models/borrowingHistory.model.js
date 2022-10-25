@@ -23,6 +23,18 @@ module.exports = (sequelize) => {
         isApproved: {
             allowNull: false,
             type: DataTypes.BOOLEAN
+        },
+        createdAt: {
+            allowNull: true,
+            type: DataTypes.TIME
+        },
+        updatedAt: {
+            allowNull: true,
+            type: DataTypes.TIME
+        },
+        deletedAt: {
+            allowNull: true,
+            type: DataTypes.TIME
         }
     });
 }
