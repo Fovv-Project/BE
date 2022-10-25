@@ -27,10 +27,7 @@ exports.up = pgm => {
             },
         }),
         pgm.createTable('attendances', {
-            idAbsensi: {
-                primaryKey: true,
-                type: 'integer'
-            },
+            idAbsensi: 'id',
             nim: {
                 type: 'varchar(15)',
                 notNull: true,
@@ -48,12 +45,10 @@ exports.up = pgm => {
             }
         }),
         pgm.createTable('categories', {
-            idKategori: {
-                primaryKey: true,
-                type: 'integer'
-            },
+            idKategori: 'id',
             jenisKategori: {
                 type: 'varchar(255)',
+                unique: true,
                 notNull: true,
             },
             createdAt: {
