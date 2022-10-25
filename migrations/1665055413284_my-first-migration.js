@@ -57,12 +57,14 @@ exports.up = pgm => {
                 notNull: true,
             },
             createdAt: {
-                type: pgm.func('current_timestamp'),
-                notNull: false
+                type: 'timestamp',
+                notNull: false,
+                default: pgm.func('current_timestamp')
             },
             updatedAt: {
-                type: pgm.func('current_timestamp'),
-                notNull: false
+                type: 'timestamp',
+                notNull: false,
+                default: pgm.func('current_timestamp')
             },
             deletedAt: {
                 type: 'timestamp',
@@ -154,12 +156,14 @@ exports.up = pgm => {
                 notNull: true
             },
             createdAt: {
-                type: pgm.func('current_timestamp'),
-                notNull: false
+                type: 'timestamp',
+                notNull: false,
+                default: pgm.func('current_timestamp')
             },
             updatedAt: {
-                type: pgm.func('current_timestamp'),
-                notNull: false
+                type: 'timestamp',
+                notNull: false,
+                default: pgm.func('current_timestamp')
             },
             deletedAt: {
                 type: 'timestamp',
