@@ -1,14 +1,13 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require('../utils/database');
-const book = require('./books.model');
 
-const Category = sequelize.define("category", {
-    idKategori: DataTypes.INTEGER,
-    jenisKategori: DataTypes.STRING
-});
-
-Category.hasMany(book.Book);
-
-module.exports = {
-    Category
+module.exports = (sequelize) => {
+    sequelize.define("category", {
+        idKategori: {
+            allowNull: false,
+            autoIncrement: true,
+            primaryKey: true,
+            type: DataTypes.INTEGER
+        },
+        jenisKategori: DataTypes.STRING
+    });
 }
