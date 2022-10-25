@@ -8,7 +8,11 @@ module.exports = (sequelize) => {
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        jenisKategori: DataTypes.STRING,
+        jenisKategori: {
+            allowNull: false,
+            unique: true,
+            type: DataTypes.STRING
+        },
         createdAt: {
             allowNull: true,
             type: DataTypes.TIME
