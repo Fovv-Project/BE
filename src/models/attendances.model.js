@@ -1,13 +1,16 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require('../utils/database');
-const user = require('./users.model')
 
-const Attendance = sequelize.define("attendance", {
-    idAbsensi: DataTypes.INTEGER,
-    absen: DataTypes.TIME
-});
-
-Attendance.belongsTo(user.User);
-module.exports = {
-    Attendance
+module.exports = (sequelize) => {
+    sequelize.define("attendance", {
+        idAbsensi: {
+            allowNull: false,
+            autoIncrement: true,
+            primaryKey: true,
+            type: DataTypes.INTEGER
+        },
+        absen: {
+            allowNull: false,
+            type: DataTypes.TIME
+        }
+    });
 }

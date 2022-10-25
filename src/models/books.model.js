@@ -1,24 +1,47 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require('../utils/database');
-const category = require('./categories.model');
-const borrow = require('./borrowingHistory.model');
 
-const Book = sequelize.define("book", {
-    idBuku: DataTypes.STRING,
-    judulBuku: DataTypes.STRING,
-    pengarang: DataTypes.STRING,
-    penerbit: DataTypes.STRING,
-    tahunTerbit: DataTypes.STRING,
-    jumlahHalaman: DataTypes.STRING,
-    deskripsi: DataTypes.STRING,
-    createdAt: DataTypes.TIME,
-    updatedAt: DataTypes.TIME,
-    deletedAt: DataTypes.TIME
-});
-
-Book.belongsTo(category.Category);
-Book.hasMany(borrow.BorrowingHistory);
-
-module.exports = {
-    Book
+module.exports = (sequelize) => {
+    sequelize.define("book", {
+        idBuku: {
+            allowNull: false,
+            primaryKey: true,
+            type: DataTypes.STRING
+        },
+        judulBuku: {
+            allowNull: false,
+            type: DataTypes.STRING
+        },
+        pengarang: {
+            allowNull: false,
+            type: DataTypes.STRING
+        },
+        penerbit: {
+            allowNull: false,
+            type: DataTypes.STRING
+        },
+        tahunTerbit: {
+            allowNull: false,
+            type: DataTypes.STRING
+        },
+        jumlahHalaman: {
+            allowNull: false,
+            type: DataTypes.STRING
+        },
+        deskripsi: {
+            allowNull: false,
+            type: DataTypes.STRING
+        },
+        createdAt: {
+            allowNull: true,
+            type: DataTypes.TIME
+        },
+        updatedAt: {
+            allowNull: true,
+            type: DataTypes.TIME
+        },
+        deletedAt: {
+            allowNull: true,
+            type: DataTypes.TIME
+        }
+    });
 }
