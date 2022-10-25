@@ -3,13 +3,6 @@ const { category } = db.models
 
 module.exports = {
     get: async(req, res, next) => {
-        if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
-
         try {
             const response = await category.findAll();
             return res.status(200).json({
@@ -29,6 +22,12 @@ module.exports = {
     },
 
     insert: async(req, res, next) => {
+        if (res.locals.admin == false)
+            return res.status(403).json({
+                success: false,
+                code: 403,
+                message: "Forbidden resource"
+            })
         try {
             const jenisKategori = req.body.jenisKategori
             const response = await category.create({
@@ -52,6 +51,12 @@ module.exports = {
     },
 
     updateId: async(req, res, next) => {
+        if (res.locals.admin == false)
+            return res.status(403).json({
+                success: false,
+                code: 403,
+                message: "Forbidden resource"
+            })
         try {
             const idKategori = req.params.id
             const jenisKategori = req.body.jenisKategori;
@@ -87,6 +92,12 @@ module.exports = {
     },
 
     removeId: async(req, res, next) => {
+        if (res.locals.admin == false)
+            return res.status(403).json({
+                success: false,
+                code: 403,
+                message: "Forbidden resource"
+            })
         try {
             await category.destroy({
                 where: {
