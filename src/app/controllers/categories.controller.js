@@ -33,7 +33,7 @@ module.exports = {
             const jenisKategori = req.body.jenisKategori;
 
             const response = await category.create({
-                'jenisKategori': jenisKategori
+                jenisKategori: jenisKategori
             });
 
             return res.status(201).json({
@@ -57,7 +57,7 @@ module.exports = {
             const jenisKategori = req.body.jenisKategori;
 
             const response = await category.update({
-                'jenisKategori': jenisKategori
+                jenisKategori: jenisKategori
             }, {
                 where: {
                     idKategori: req.params.idKategori
