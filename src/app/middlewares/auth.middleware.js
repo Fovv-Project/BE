@@ -6,20 +6,31 @@ module.exports = async (req, res, next) => {
   
   const authHeader = req.headers['authorization']
   if(util.authHeaderIsInvalid(authHeader))
-    res.status(401).json()
-    .send("Invalid Authorization Header.")
+    return res.status(401).json({
+      success : false,
+      code : 401,
+      message : "Invalid authorization header"
+    })
   
   const token = util.getToken(authHeader)
   let decodedToken
   try {
     decodedToken = await getAuth().verifyIdToken(token)
   }catch (err){
-    return res.sendStatus(401).send(err.message)
+    return res.sendStatus(401).json({
+      success : false,
+      code : 401,
+      message : err.message
+    })
   }
 
   const {email, admin} = decodedToken
   if(util.emailIsInvalid(email))
-    res.status(403).send("Unauthorized Email Format.")  
+    return res.status(403).json({
+      success : false,
+      code : 403,
+      message : "Unauthorized email format"
+    })
   
     // Assuming CustomUserClaims is stored in "admin" variable.
     if(admin == true)
