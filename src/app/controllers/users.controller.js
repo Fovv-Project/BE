@@ -1,4 +1,4 @@
-const db = require('../../utils/db.setup')
+const db = require('../../utils/db.setup.util')
 const { user } = db.models
 
 module.exports = {
