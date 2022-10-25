@@ -1,11 +1,12 @@
 const express = require('express')
 const router = express.Router()
+const Category = require('../controllers/categories.controller')
 
 /* Middleware */
 router.use(require('../middlewares/logger.middleware'))
 
 /* Route */
-router.get('/')
+router.get('/', Category.get)
 router.post('/', [
     require('../middlewares/auth.middleware'),
 ])
