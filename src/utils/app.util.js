@@ -7,18 +7,22 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const app = express()
-    const routesPath = path.resolve(__dirname, '..', 'app', 'routes')    
-        
-for (const routeFile of fs.readdirSync(routesPath)){     
+app.use(express.json());
+const routesPath = path.resolve(__dirname, '..', 'app', 'routes')
 
-    const {ext, name} = path.parse(routeFile)
+for (const routeFile of fs.readdirSync(routesPath)) {
+
+    const { ext, name } = path.parse(routeFile)
     const filePath = path.join(routesPath, name)
-                
-    if(ext == '.js')
-        app.use('/' + name.replace('.route', ''), require(filePath))       
-            
+
+    if (ext == '.js')
+        app.use('/' + name.replace('.route', ''), require(filePath))
+
 }
 
+// Body Parser
+
+
 module.exports = {
-    getRoutedApp : () => app
+    getRoutedApp: () => app
 }
