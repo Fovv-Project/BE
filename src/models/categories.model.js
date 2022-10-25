@@ -8,6 +8,18 @@ module.exports = (sequelize) => {
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        jenisKategori: DataTypes.STRING
+        jenisKategori: DataTypes.STRING,
+        createdAt: {
+            allowNull: true,
+            type: DataTypes.TIME
+        },
+        updatedAt: {
+            allowNull: true,
+            type: DataTypes.TIME
+        },
+        deletedAt: {
+            allowNull: true,
+            type: DataTypes.TIME
+        }
     });
 }
