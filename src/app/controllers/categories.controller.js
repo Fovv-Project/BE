@@ -53,13 +53,20 @@ module.exports = {
 
     updateId: async(req, res, next) => {
         try {
+            const idKategori = req.params.id
             const jenisKategori = req.body.jenisKategori;
 
             const response = await category.update({
                 jenisKategori: jenisKategori
             }, {
                 where: {
-                    idKategori: req.params.idKategori
+                    idKategori: idKategori
+                }
+            });
+
+            const getData = await category.findOne({
+                where: {
+                    idKategori: response
                 }
             });
 
@@ -67,7 +74,7 @@ module.exports = {
                 success: true,
                 code: 200,
                 message: "Updated category successfully",
-                data: response
+                data: getData
             });
 
         } catch (error) {
@@ -83,14 +90,16 @@ module.exports = {
         try {
             await category.destroy({
                 where: {
-                    idKategori: req.params.idKategori
+                    idKategori: req.params.id
                 }
             });
-            return res.status(204).json({
+
+            return res.status(200).json({
                 success: true,
-                code: 204,
+                code: 200,
                 message: "Deleted category successfully",
             });
+
         } catch (error) {
             return res.status(500).json({
                 success: false,
