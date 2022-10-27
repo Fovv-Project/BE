@@ -69,9 +69,16 @@ module.exports = {
                 }
             });
 
+            if (response == 0)
+                return res.status(404).json({
+                    success: false,
+                    code: 404,
+                    message: "Category not found"
+                })
+
             const getData = await category.findOne({
                 where: {
-                    idKategori: response
+                    idKategori: idKategori
                 }
             });
 
