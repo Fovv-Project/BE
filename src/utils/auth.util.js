@@ -16,7 +16,7 @@ module.exports = {
     },
 
     emailIsInvalid : (email) => {
-        const postfixIsValid = postfix => postfix == "student.unsri.ac.id" || postfix == "student.ilkom.unsri.ac.id"
+        const postfixIsValid = postfix => postfix == "student.unsri.ac.id" || postfix == "students.ilkom.unsri.ac.id"
         const [prefix, postfix] = email.split('@')
         
         if(!isNumeric(prefix))
@@ -30,6 +30,8 @@ module.exports = {
 
     getToken : (auth_header) => {
         return auth_header.split(' ')[1]
-    }
+    },
+
+    getNim : (email) => email.split('@')[0]
     
 }
