@@ -36,6 +36,7 @@ module.exports = async (req, res, next) => {
     if(admin == true)
       res.locals.admin = true
     
+    decodedToken.nim = util.getNim(email)
     res.locals.userInfo = decodedToken
     next()
 }
