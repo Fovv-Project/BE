@@ -8,7 +8,7 @@ module.exports = {
             return res.status(200).json({
                 success: true,
                 code: 200,
-                message: "Get category record successfully",
+                message: "Get categories successfully",
                 data: response
             });
         } catch (error) {
@@ -37,7 +37,7 @@ module.exports = {
             return res.status(201).json({
                 success: true,
                 code: 201,
-                message: "Create new category record successfully",
+                message: "Create new category successfully",
                 data: response
             });
 
