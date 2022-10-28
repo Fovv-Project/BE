@@ -10,7 +10,12 @@
     "start": "nodemon src/app/app.js",
     "test": "mocha test/**/*.js",
     "migrate": "node-pg-migrate",
-    "dev": "docker compose down; docker compose up -d; sleep 2; npm run migrate up;"
+
+    "docker:db": "docker compose down; docker compose up -d; sleep 2; npm run migrate up;",
+
+    "seed:firebase:random": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importRandomUser()'",
+    "seed:firebase:base": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importBaseUser()'",
+    "seed:firebase:input": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importUserFromInput()'"
   },
   "repository": {
     "type": "git",
@@ -28,6 +33,7 @@
     "mocha": "^10.0.0",
     "node-pg-migrate": "^6.2.2",
     "nodemon": "^2.0.20",
+    "prompt-sync": "^4.2.0",
     "supertest": "^6.2.4"
   },
   "dependencies": {
