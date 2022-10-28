@@ -6,8 +6,12 @@ module.exports = {
 
         try {
 
-            if (res.locals.admin == false)
-                throw new Error('403')
+            if (res.locals.userInfo.admin == false)
+                return res.status(403).json({
+                    success: false,
+                    code: 403,
+                    message: "Forbidden resource"
+                })
 
             return res.status(200).json({
                 success: true,
@@ -17,13 +21,6 @@ module.exports = {
             });
 
         } catch (err) {
-
-            if(err.message === "403")
-                return res.status(403).json({
-                    success: false,
-                    code: 403,
-                    message: "Forbidden resource"
-                })
 
             return res.status(500).json({
                 success: false,
@@ -37,14 +34,20 @@ module.exports = {
 
     getNim: async (req, res, next) => {
 
-        const userName = res.locals.userInfo.name
-        const userNim = res.locals.userInfo.nim
-
-        let userRecord, isInserted
-
         try {
 
-            [userRecord, isInserted] = await user.findOrCreate({
+            const userName = res.locals.userInfo.name
+            const userNim = res.locals.userInfo.nim        
+            const reqNim = res.params.nim
+
+            if(reqNim !== userNim)
+                return res.status(403).json({
+                    success: false,
+                    code: 403,
+                    message: "Forbidden resource"
+                })
+            
+            const [userRecord, isInserted] = await user.findOrCreate({
                 where: { nim: userNim },
                 defaults: {
                     nim: userNim,
@@ -56,8 +59,8 @@ module.exports = {
                 success: true,
                 code: 200,
                 message: isInserted ? `Successfully inserted new user record of NIM : [ ${userNim} ] with username : [ ${userName} ]`
-                    : `Successfully get user record with NIM : [ ${reqNim} ]`,
-                data: userRecords
+                    : `Successfully get user record with NIM : [ ${userNim} ]`,
+                data: userRecord
             })
 
         } catch (err) {
