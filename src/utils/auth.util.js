@@ -16,7 +16,7 @@ module.exports = {
     },
 
     emailIsInvalid : (email) => {
-        const postfixIsValid = postfix => postfix == "student.unsri.ac.id" || postfix == "students.ilkom.unsri.ac.id"
+        const postfixIsValid = postfix => postfix == "students.ilkom.unsri.ac.id"
         const [prefix, postfix] = email.split('@')
         
         if(!isNumeric(prefix))
