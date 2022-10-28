@@ -8,6 +8,6 @@ router.use(require('../middlewares/logger.middleware'))
 
 /* Route */
 router.get('/', userController.get)
-router.get('/:nim')
+router.get('/:nim', userController.getNim)
 
 module.exports = router
