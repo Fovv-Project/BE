@@ -4,8 +4,17 @@ const { borrowingHistory } = db.models
 module.exports = {
     get: async(req, res, next) => {
         try {
-            const response = await borrowingHistory.findAll();
-            res.status(200).json({
+            let response;
+            if (res.locals.admin == true) {
+                response = await borrowingHistory.findAll();
+            } else if (res.locals.userInfo.nim == borrowingHistory.nim) {
+                response = await borrowingHistory.findAll({
+                    where: {
+                        nim: res.locals.userInfo.nim
+                    }
+                });
+            }
+            return res.status(200).json({
                 success: true,
                 code: 200,
                 message: "Get borrow histories successfully",
@@ -22,15 +31,26 @@ module.exports = {
 
     getId: async(req, res, next) => {
         try {
-            const response = await borrowingHistory.findOne({
-                where: {
-                    idHistori: req.params.id
-                }
-            });
-            res.status(200).json({
+            let response;
+            const idHistori = req.params.id;
+            if (res.locals.admin == true) {
+                response = await borrowingHistory.findOne({
+                    where: {
+                        idHistori: idHistori
+                    }
+                });
+            } else if (res.locals.userInfo.nim == borrowingHistory.nim) {
+                response = await borrowingHistory.findOne({
+                    where: {
+                        idHistori: idHistori,
+                        nim: res.locals.userInfo.nim
+                    }
+                });
+            }
+            return res.status(200).json({
                 success: true,
                 code: 200,
-                message: `Get borrow history with id ${req.params.id} successfully`,
+                message: `Get borrow history with id ${idHistori} successfully`,
                 data: response
             });
         } catch (error) {
@@ -50,7 +70,7 @@ module.exports = {
                 isApproved: false
             });
 
-            res.status(201).json({
+            return res.status(201).json({
                 success: true,
                 code: 201,
                 message: "Created new borrow history successfully",
@@ -67,6 +87,12 @@ module.exports = {
     },
 
     updateStatus: async(req, res, next) => {
+        if (res.locals.admin == false)
+            return res.status(403).json({
+                success: false,
+                code: 403,
+                message: "Forbidden resource"
+            })
         try {
 
             const response = await borrowingHistory.update({
@@ -90,7 +116,7 @@ module.exports = {
                 }
             });
 
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 code: 200,
                 message: "Updated borrow status successfully",
@@ -107,6 +133,12 @@ module.exports = {
     },
 
     updateApproval: async(req, res, next) => {
+        if (res.locals.admin == false)
+            return res.status(403).json({
+                success: false,
+                code: 403,
+                message: "Forbidden resource"
+            })
         try {
             const idHistori = req.params.id;
             const response = await borrowingHistory.update({
@@ -130,7 +162,7 @@ module.exports = {
                 }
             });
 
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 code: 200,
                 message: "Updated borrow approval successfully",
@@ -148,12 +180,20 @@ module.exports = {
 
     removeId: async(req, res, next) => {
         try {
-            await borrowingHistory.destroy({
+            const response = await borrowingHistory.destroy({
                 where: {
                     idHistori: req.params.id
                 }
             });
-            res.status(204).json({
+
+            if (response == 0)
+                return res.status(404).json({
+                    success: false,
+                    code: 404,
+                    message: "Borrow history not found"
+                })
+
+            return res.status(204).json({
                 success: true,
                 code: 204,
                 message: "Deleted borrow history successfully",
