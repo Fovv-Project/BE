@@ -94,12 +94,12 @@ module.exports = {
                 message: "Forbidden resource"
             })
         try {
-
+            const idHistori = req.params.id;
             const response = await borrowingHistory.update({
                 'statusPinjam': req.body.statusPinjam
             }, {
                 where: {
-                    idHistori: req.params.id
+                    idHistori: idHistori
                 }
             });
 
@@ -185,17 +185,15 @@ module.exports = {
                     idHistori: req.params.id
                 }
             });
-
             if (response == 0)
                 return res.status(404).json({
                     success: false,
                     code: 404,
                     message: "Borrow history not found"
                 })
-
-            return res.status(204).json({
+            return res.status(200).json({
                 success: true,
-                code: 204,
+                code: 200,
                 message: "Deleted borrow history successfully",
             });
         } catch (error) {
