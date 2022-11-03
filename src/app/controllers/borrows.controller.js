@@ -1,43 +1,50 @@
-import BorrowingHistory from "../models/borrowingHistory.model.js";
+const db = require('../../utils/db.setup.util')
+const { borrowingHistory } = db.models
 
 module.exports = {
     get: async(req, res, next) => {
         try {
-            const response = await BorrowingHistory.findAll();
+            const response = await borrowingHistory.findAll();
             res.status(200).json({
                 success: true,
                 code: 200,
-                message: "Get borrow history successfully",
+                message: "Get borrow histories successfully",
                 data: response
             });
         } catch (error) {
-            return res.status(500).send(error.message);
-
+            return res.status(500).json({
+                success: false,
+                code: 500,
+                message: error.message
+            })
         }
     },
 
     getId: async(req, res, next) => {
         try {
-            const response = await BorrowingHistory.findOne({
+            const response = await borrowingHistory.findOne({
                 where: {
-                    idHistori: req.params.idHistori
+                    idHistori: req.params.id
                 }
             });
             res.status(200).json({
                 success: true,
                 code: 200,
-                message: `Get User with id ${req.params.idHistori} successfully`,
+                message: `Get borrow history with id ${req.params.id} successfully`,
                 data: response
             });
         } catch (error) {
-            return res.status(500).send(error.message);
+            return res.status(500).json({
+                success: false,
+                code: 500,
+                message: error.message
+            })
         }
     },
 
     insert: async(req, res, next) => {
         try {
-            const Date = new Date();
-            const response = await BorrowingHistory.create({
+            const response = await borrowingHistory.create({
                 idBuku: req.body.idBuku,
                 statusPinjam: "Menunggu Approval",
                 isApproved: false
@@ -51,18 +58,35 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({ error: error.message })
+            return res.status(500).json({
+                success: false,
+                code: 500,
+                message: error.message
+            })
         }
     },
 
     updateStatus: async(req, res, next) => {
         try {
 
-            const response = await Category.update({
+            const response = await borrowingHistory.update({
                 'statusPinjam': req.body.statusPinjam
             }, {
                 where: {
-                    idHistori: req.params.idHistori
+                    idHistori: req.params.id
+                }
+            });
+
+            if (response == 0)
+                return res.status(404).json({
+                    success: false,
+                    code: 404,
+                    message: "Borrow history not found"
+                })
+
+            const getData = await borrowingHistory.findOne({
+                where: {
+                    idHistori: idHistori
                 }
             });
 
@@ -70,21 +94,39 @@ module.exports = {
                 success: true,
                 code: 200,
                 message: "Updated borrow status successfully",
-                data: response
+                data: getData
             });
 
         } catch (error) {
-            return res.status(500).json({ error: error.message })
+            return res.status(500).json({
+                success: false,
+                code: 500,
+                message: error.message
+            })
         }
     },
 
     updateApproval: async(req, res, next) => {
         try {
-            const response = await Category.update({
+            const idHistori = req.params.id;
+            const response = await borrowingHistory.update({
                 'isApproved': true
             }, {
                 where: {
-                    idHistori: req.params.idHistori
+                    idHistori: idHistori
+                }
+            });
+
+            if (response == 0)
+                return res.status(404).json({
+                    success: false,
+                    code: 404,
+                    message: "Borrow history not found"
+                })
+
+            const getData = await borrowingHistory.findOne({
+                where: {
+                    idHistori: idHistori
                 }
             });
 
@@ -92,19 +134,23 @@ module.exports = {
                 success: true,
                 code: 200,
                 message: "Updated borrow approval successfully",
-                data: response
+                data: getData
             });
 
         } catch (error) {
-            return res.status(500).json({ error: error.message })
+            return res.status(500).json({
+                success: false,
+                code: 500,
+                message: error.message
+            })
         }
     },
 
     removeId: async(req, res, next) => {
         try {
-            await BorrowingHistory.destroy({
+            await borrowingHistory.destroy({
                 where: {
-                    idHistori: req.params.idHistori
+                    idHistori: req.params.id
                 }
             });
             res.status(204).json({
@@ -113,7 +159,11 @@ module.exports = {
                 message: "Deleted borrow history successfully",
             });
         } catch (error) {
-            return res.status(500).send(error.message);
+            return res.status(500).json({
+                success: false,
+                code: 500,
+                message: error.message
+            })
         }
     },
 }
