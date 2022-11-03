@@ -30,8 +30,7 @@ exports.up = pgm => {
             idAbsensi: 'id',
             nim: {
                 type: 'varchar(15)',
-                notNull: true,
-                references: '"users"'
+                notNull: true
             },
             waktuAbsen: {
                 type: 'timestamp',
@@ -73,8 +72,7 @@ exports.up = pgm => {
             },
             idKategori: {
                 type: 'integer',
-                notNull: true,
-                references: '"categories"'
+                notNull: true
             },
             judulBuku: {
                 type: 'varchar(255)',
@@ -121,16 +119,14 @@ exports.up = pgm => {
             }
         }),
         pgm.createTable('borrowingHistory', {
-            idHistory: 'id',
+            idHistori: 'id',
             nim: {
                 type: 'varchar(15)',
-                notNull: true,
-                references: '"users"'
+                notNull: true
             },
             idBuku: {
                 type: 'varchar(15)',
-                notNull: true,
-                references: '"books"'
+                notNull: true
             },
             tglPinjam: {
                 type: 'timestamp',
