@@ -130,12 +130,12 @@ exports.up = pgm => {
             },
             tglPinjam: {
                 type: 'timestamp',
-                notNull: true,
+                notNull: false,
                 default: pgm.func('current_timestamp')
             },
             tglKembali: {
                 type: 'timestamp',
-                notNull: true,
+                notNull: false,
                 default: pgm.func("current_timestamp + interval '7 day'")
             },
             statusPinjam: {

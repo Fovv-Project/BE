@@ -9,11 +9,11 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER
         },
         tglPinjam: {
-            allowNull: false,
+            allowNull: true,
             type: DataTypes.TIME
         },
         tglKembali: {
-            allowNull: false,
+            allowNull: true,
             type: DataTypes.TIME
         },
         statusPinjam: {
