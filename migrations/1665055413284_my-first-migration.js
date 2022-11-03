@@ -57,8 +57,7 @@ exports.up = pgm => {
             },
             updatedAt: {
                 type: 'timestamp',
-                notNull: false,
-                default: pgm.func('current_timestamp')
+                notNull: false
             },
             deletedAt: {
                 type: 'timestamp',
@@ -130,12 +129,12 @@ exports.up = pgm => {
             },
             tglPinjam: {
                 type: 'timestamp',
-                notNull: true,
+                notNull: false,
                 default: pgm.func('current_timestamp')
             },
             tglKembali: {
                 type: 'timestamp',
-                notNull: true,
+                notNull: false,
                 default: pgm.func("current_timestamp + interval '7 day'")
             },
             statusPinjam: {
@@ -153,8 +152,7 @@ exports.up = pgm => {
             },
             updatedAt: {
                 type: 'timestamp',
-                notNull: false,
-                default: pgm.func('current_timestamp')
+                notNull: false
             },
             deletedAt: {
                 type: 'timestamp',
