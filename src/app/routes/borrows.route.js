@@ -15,6 +15,12 @@ router.get('/:id', [
 router.post('/', [
     require('../middlewares/auth.middleware'),
 ], borrowController.insert)
+router.patch('/:id/status', [
+    require('../middlewares/auth.middleware'),
+], borrowController.updateStatus)
+router.patch('/:id/approval', [
+    require('../middlewares/auth.middleware'),
+], borrowController.updateApproval)
 router.delete('/:id', [
     require('../middlewares/auth.middleware'),
 ], borrowController.removeId)
