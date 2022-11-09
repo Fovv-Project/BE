@@ -106,11 +106,18 @@ module.exports = {
                 message: "Forbidden resource"
             })
         try {
-            await category.destroy({
+            const response = await category.destroy({
                 where: {
                     idKategori: req.params.id
                 }
             });
+
+            if (response == 0)
+                return res.status(404).json({
+                    success: false,
+                    code: 404,
+                    message: "Borrow history not found"
+                })
 
             return res.status(200).json({
                 success: true,
