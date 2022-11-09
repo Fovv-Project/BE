@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        absen: {
+        waktuAbsen: {
             allowNull: false,
             type: DataTypes.TIME
         }

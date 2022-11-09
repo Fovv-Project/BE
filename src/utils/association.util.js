@@ -1,17 +1,33 @@
 function applyExtraSetup(sequelize) {
     const { user, attendance, book, category, borrowingHistory } = sequelize.models;
 
-    user.hasMany(attendance);
-    attendance.belongsTo(user);
+    user.hasMany(attendance, {
+        foreignKey: "nim"
+    });
+    attendance.belongsTo(user, {
+        foreignKey: "nim"
+    });
 
-    user.hasMany(borrowingHistory);
-    borrowingHistory.belongsTo(user);
+    user.hasMany(borrowingHistory, {
+        foreignKey: "nim"
+    });
+    borrowingHistory.belongsTo(user, {
+        foreignKey: "nim"
+    });
 
-    category.hasMany(book);
-    book.belongsTo(category);
+    category.hasMany(book, {
+        foreignKey: "idKategori"
+    });
+    book.belongsTo(category, {
+        foreignKey: "idKategori"
+    });
 
-    book.hasMany(borrowingHistory);
-    borrowingHistory.belongsTo(book);
+    book.hasMany(borrowingHistory, {
+        foreignKey: "idBuku"
+    });
+    borrowingHistory.belongsTo(book, {
+        foreignKey: "idBuku"
+    });
 }
 
 module.exports = { applyExtraSetup };

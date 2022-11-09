@@ -27,14 +27,10 @@ exports.up = pgm => {
             },
         }),
         pgm.createTable('attendances', {
-            idAbsensi: {
-                primaryKey: true,
-                type: 'integer'
-            },
+            idAbsensi: 'id',
             nim: {
                 type: 'varchar(15)',
-                notNull: true,
-                references: '"users"'
+                notNull: true
             },
             waktuAbsen: {
                 type: 'timestamp',
@@ -48,13 +44,25 @@ exports.up = pgm => {
             }
         }),
         pgm.createTable('categories', {
-            idKategori: {
-                primaryKey: true,
-                type: 'integer'
-            },
+            idKategori: 'id',
             jenisKategori: {
                 type: 'varchar(255)',
+                unique: true,
                 notNull: true,
+            },
+            createdAt: {
+                type: 'timestamp',
+                notNull: false,
+                default: pgm.func('current_timestamp')
+            },
+            updatedAt: {
+                type: 'timestamp',
+                notNull: false,
+                default: pgm.func('current_timestamp')
+            },
+            deletedAt: {
+                type: 'timestamp',
+                notNull: false
             }
         }),
         pgm.createTable('books', {
@@ -64,8 +72,7 @@ exports.up = pgm => {
             },
             idKategori: {
                 type: 'integer',
-                notNull: true,
-                references: '"categories"'
+                notNull: true
             },
             judulBuku: {
                 type: 'varchar(255)',
@@ -112,16 +119,14 @@ exports.up = pgm => {
             }
         }),
         pgm.createTable('borrowingHistory', {
-            idHistory: 'id',
+            idHistori: 'id',
             nim: {
                 type: 'varchar(15)',
-                notNull: true,
-                references: '"users"'
+                notNull: true
             },
             idBuku: {
                 type: 'varchar(15)',
-                notNull: true,
-                references: '"books"'
+                notNull: true
             },
             tglPinjam: {
                 type: 'timestamp',
@@ -141,6 +146,20 @@ exports.up = pgm => {
                 type: 'boolean',
                 notNull: true
             },
+            createdAt: {
+                type: 'timestamp',
+                notNull: false,
+                default: pgm.func('current_timestamp')
+            },
+            updatedAt: {
+                type: 'timestamp',
+                notNull: false,
+                default: pgm.func('current_timestamp')
+            },
+            deletedAt: {
+                type: 'timestamp',
+                notNull: false
+            }
         }),
         pgm.addConstraint('borrowingHistory', 'nim', {
             foreignKeys: {
