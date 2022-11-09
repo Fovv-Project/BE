@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const express = require('express')
 const dotenv = require('dotenv')
+const errorHandler  = require('../app/middlewares/errorHandler.middleware')
 
 // Configure dotenv
 dotenv.config()
@@ -20,8 +21,7 @@ for (const routeFile of fs.readdirSync(routesPath)) {
 
 }
 
-// Body Parser
-
+app.use(errorHandler)
 
 module.exports = {
     getRoutedApp: () => app

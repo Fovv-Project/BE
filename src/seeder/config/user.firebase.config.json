@@ -1,0 +1,24 @@
+{
+    "baseUsers" : [
+        {
+            "uid": "admin-uid",
+            "displayName": "admin-displayName",
+            "email": "12345678@students.ilkom.unsri.ac.id",
+            "password": "12345678",
+            "photoURL": "http://www.example.com/admin.png",
+            "emailVerified": true,
+            "phoneNumber": "+621234567890",
+            "admin": true
+        },
+        {
+            "uid": "user-uid",
+            "displayName": "user-displayName",
+            "email": "87654321@students.ilkom.unsri.ac.id",
+            "password": "87654321",
+            "photoURL": "http://www.example.com/user.png",
+            "emailVerified": true,
+            "phoneNumber": "+620987654321",
+            "admin": true
+        }
+    ]
+}
