@@ -12,5 +12,8 @@ module.exports = (sequelize) => {
             allowNull: false,
             type: DataTypes.TIME
         }
-    });
+    },{
+        timestamps: false
+    }
+    );
 }
