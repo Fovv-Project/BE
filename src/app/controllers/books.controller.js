@@ -46,6 +46,30 @@ module.exports = {
     },
 
     insert: async(req, res, next) => {
+
+        if (!req.files || Object.keys(req.files).length === 0) {
+            return res.status(400).send('No files were uploaded.');
+        }
+
+        const file = req.files.file;
+        const fileSize = file.data.length;
+        const ext = path.extname(file.name);
+        const fileName = file.md5 + ext;
+        const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+        const allowedType = ['.png', '.jpg', '.jpeg'];
+
+        if (!allowedType.includes(ext.toLowerCase())) return res.status(422).json({ msg: "Invalid Images" });
+        if (fileSize > 5000000) return res.status(422).json({ msg: "Image must be less than 5 MB" });
+
+        file.mv(`./public/images/${fileName}`, async(err) => {
+            if (err) return res.status(500).json({ msg: err.message });
+            try {
+                await Product.create({ name: name, image: fileName, url: url });
+                res.status(201).json({ msg: "Product Created Successfuly" });
+            } catch (error) {
+                console.log(error.message);
+            }
+        })
         try {
             const response = await book.create({
                 idBuku: req.body.idBuku,
@@ -55,7 +79,8 @@ module.exports = {
                 penerbit: req.body.penerbit,
                 tahunTerbit: req.body.tahunTerbit,
                 jumlahHalaman: req.body.jumlahHalaman,
-                deskripsi: req.body.deskripsi
+                deskripsi: req.body.deskripsi,
+                file: req.files.file
             });
 
             return res.status(201).json({
