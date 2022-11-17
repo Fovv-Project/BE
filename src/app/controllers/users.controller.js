@@ -2,56 +2,76 @@ const db = require('../../utils/db.setup.util')
 const { user } = db.models
 
 module.exports = {
-    get: async(req, res, next) => {
+    get: async (req, res, next) => {
 
-        if(res.locals.admin == false)
-            return res.status(403).json({        
-                success : false,        
-                code : 403,        
-                message : "Forbidden resource"
-            })
-        
         try {
 
-            const response = await user.findAll();
+            if (res.locals.userInfo.admin == false)
+                return res.status(403).json({
+                    success: false,
+                    code: 403,
+                    message: "Forbidden resource"
+                })
+
             return res.status(200).json({
                 success: true,
                 code: 200,
                 message: "Get user record successfully",
-                data: response
+                data: await user.findAll()
             });
 
-        } catch (error) {
+        } catch (err) {
 
             return res.status(500).json({
-                success : false,        
-                code : 500,        
-                message : "Internal server error"
+                success: false,
+                code: 500,
+                message: "Internal server error"
             })
 
         }
 
     },
-    
-    getNim: async(req, res, next) => {
+
+    getNim: async (req, res, next) => {
+
         try {
-            const response = await user.findOne({
-                where: {
-                    nim: req.params.nim
+
+            const userName = res.locals.userInfo.name
+            const userNim = res.locals.userInfo.nim        
+            const reqNim = res.params.nim
+
+            if(reqNim !== userNim)
+                return res.status(403).json({
+                    success: false,
+                    code: 403,
+                    message: "Forbidden resource"
+                })
+            
+            const [userRecord, isInserted] = await user.findOrCreate({
+                where: { nim: userNim },
+                defaults: {
+                    nim: userNim,
+                    nama: userName
                 }
             });
+
             return res.status(200).json({
                 success: true,
                 code: 200,
-                message: `Get user with nim ${req.params.nim} successfully`,
-                data: response
-            });
-        } catch (err) {
-            return res.status(500).json({
-                success : false,
-                code : 500,
-                message : err.message
+                message: isInserted ? `Successfully inserted new user record of NIM : [ ${userNim} ] with username : [ ${userName} ]`
+                    : `Successfully get user record with NIM : [ ${userNim} ]`,
+                data: userRecord
             })
+
+        } catch (err) {
+
+            return res.status(500).json({
+                success: false,
+                code: 500,
+                message: err.message
+            })
+
         }
+
     },
 }
