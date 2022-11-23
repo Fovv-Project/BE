@@ -1,5 +1,5 @@
 const { ClientError } = require('../../errors/classes/super/client.error')
-
+const logger = require('../../utils/logger.util')
 
 module.exports = (err, req, res, next) => {
 
@@ -13,10 +13,10 @@ module.exports = (err, req, res, next) => {
             message: errMessage
         })
 
-    console.log(errMessage);
-    return res.status(code).json({
+    logger.error('error-handler', errMessage)
+    return res.status(500).json({
         success: false,
-        code: 400,
+        code: 500,
         message: "Internal server error"
     })
 }
