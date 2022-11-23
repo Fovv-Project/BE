@@ -1,6 +1,6 @@
 const { ClientError } = require('../../errors/classes/super/client.error')
 const { FirebaseError } = require('../../../node_modules/firebase-admin/lib/utils/error.js')
-
+const logger = require('../../utils/logger.util')
 
 module.exports = (err, req, res, next) => {
 
@@ -21,7 +21,7 @@ module.exports = (err, req, res, next) => {
             message: errMessage
         })
 
-    console.log(err);
+    logger.error('error-handler', errMessage)
     
     return res.status(500).json({
         success: false,

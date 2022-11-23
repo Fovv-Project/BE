@@ -12,11 +12,7 @@ module.exports = {
                 data: response
             });
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: "Internal server error"
-            })
+            next(error)
 
         }
     },
@@ -37,11 +33,7 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
@@ -66,11 +58,7 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
@@ -111,11 +99,7 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
@@ -134,11 +118,7 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 }
