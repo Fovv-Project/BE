@@ -21,11 +21,7 @@ module.exports = {
                 data: response
             });
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
@@ -54,11 +50,7 @@ module.exports = {
                 data: response
             });
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
@@ -78,11 +70,7 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
@@ -124,11 +112,7 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
@@ -170,11 +154,7 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
@@ -197,11 +177,7 @@ module.exports = {
                 message: "Deleted borrow history successfully",
             });
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 }
