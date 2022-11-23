@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, Sequelize } = require("sequelize");
 
 module.exports = (sequelize) => {
     sequelize.define("attendance", {
@@ -10,7 +10,10 @@ module.exports = (sequelize) => {
         },
         waktuAbsen: {
             allowNull: false,
-            type: DataTypes.TIME
+            type: DataTypes.NOW,
+            defaultValue : Sequelize.fn('NOW')
         }
+    },{
+        timestamps: false
     });
 }
