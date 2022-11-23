@@ -23,9 +23,9 @@ module.exports = (err, req, res, next) => {
 
     console.log(err);
     
-    return res.status(400).json({
+    return res.status(500).json({
         success: false,
-        code: 400,
+        code: 500,
         message: "Internal server error"
     })
 }
