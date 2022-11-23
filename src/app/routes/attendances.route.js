@@ -8,7 +8,7 @@ router.use(require('../middlewares/logger.middleware'))
 
 /* Route */
 router.get('/', attendanceController.get)
-router.get('/:nim', attendanceController.getId)
-router.post('/')
+router.get('/:id', attendanceController.getId)
+router.post('/', attendanceController.insert)
 
 module.exports = router
