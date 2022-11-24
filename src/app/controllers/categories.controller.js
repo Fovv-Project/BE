@@ -12,11 +12,7 @@ module.exports = {
                 data: response
             });
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: "Internal server error"
-            })
+            next(error)
 
         }
     },
@@ -42,11 +38,7 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
@@ -90,11 +82,7 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
@@ -106,11 +94,18 @@ module.exports = {
                 message: "Forbidden resource"
             })
         try {
-            await category.destroy({
+            const response = await category.destroy({
                 where: {
                     idKategori: req.params.id
                 }
             });
+
+            if (response == 0)
+                return res.status(404).json({
+                    success: false,
+                    code: 404,
+                    message: "Borrow history not found"
+                })
 
             return res.status(200).json({
                 success: true,
@@ -119,11 +114,7 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 }
