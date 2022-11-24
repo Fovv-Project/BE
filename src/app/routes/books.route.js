@@ -15,7 +15,7 @@ router.post('/', [
 router.patch('/:id', [
     require('../middlewares/auth.middleware'),
 ], booksController.updateId)
-router.delete('/', [
+router.delete('/:id', [
     require('../middlewares/auth.middleware'),
 ], booksController.remove)
 
