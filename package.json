@@ -10,9 +10,7 @@
     "start": "nodemon src/app/app.js",
     "test": "mocha test/**/*.js",
     "migrate": "node-pg-migrate",
-
     "docker:db": "docker compose down; docker compose up -d; sleep 2; npm run migrate up;",
-
     "seed:firebase:random": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importRandomUser()'",
     "seed:firebase:base": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importBaseUser()'",
     "seed:firebase:input": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importUserFromInput()'"
@@ -39,9 +37,11 @@
   "dependencies": {
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
+    "express-winston": "^4.2.0",
     "firebase-admin": "^11.0.1",
     "pg": "^8.8.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.25.3"
+    "sequelize": "^6.25.3",
+    "winston": "^3.8.2"
   }
 }
