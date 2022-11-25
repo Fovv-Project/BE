@@ -32,8 +32,8 @@ module.exports = {
         try {
 
             const userName = res.locals.userInfo.name
-            const userNim = res.locals.userInfo.nim
-            const reqNim = res.params.nim
+            const userNim = res.locals.userInfo.nim        
+            const reqNim = req.params.nim
 
             if (reqNim !== userNim)
                 return res.status(403).json({
