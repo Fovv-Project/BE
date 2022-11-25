@@ -1,3 +1,4 @@
+const NotFoundError = require('../../errors/classes/sub/notFound.error');
 const db = require('../../utils/db.setup.util')
 const { borrowingHistory } = db.models
 
@@ -92,11 +93,7 @@ module.exports = {
             });
 
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Borrow history not found"
-                })
+                throw new NotFoundError("Borrow History Not Found")
 
             const getData = await borrowingHistory.findOne({
                 where: {
@@ -134,11 +131,7 @@ module.exports = {
             });
 
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Borrow history not found"
-                })
+                throw new NotFoundError("Borrow History Not Found")
 
             const getData = await borrowingHistory.findOne({
                 where: {
@@ -166,11 +159,8 @@ module.exports = {
                 }
             });
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Borrow history not found"
-                })
+                throw new NotFoundError("Borrow History Not Found")
+
             return res.status(200).json({
                 success: true,
                 code: 200,

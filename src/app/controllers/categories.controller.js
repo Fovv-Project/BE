@@ -1,5 +1,6 @@
 const db = require('../../utils/db.setup.util')
 const { category } = db.models
+const NotFoundError = require('../../errors/classes/sub/notFound.error');
 
 module.exports = {
     get: async(req, res, next) => {
@@ -62,11 +63,7 @@ module.exports = {
             });
 
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Category not found"
-                })
+                throw new NotFoundError("Category not found")
 
             const getData = await category.findOne({
                 where: {
@@ -101,11 +98,7 @@ module.exports = {
             });
 
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Borrow history not found"
-                })
+                throw new NotFoundError("Category not found")
 
             return res.status(200).json({
                 success: true,
