@@ -1,5 +1,6 @@
 const db = require('../../utils/db.setup.util')
 const { book } = db.models
+const NotFoundError = require('../../errors/classes/sub/notFound.error');
 
 module.exports = {
     get: async(req, res, next) => {
@@ -104,11 +105,7 @@ module.exports = {
             });
 
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Book not found"
-                })
+                throw new NotFoundError("Book not found")
 
             const getData = await book.findOne({
                 where: {
@@ -130,11 +127,14 @@ module.exports = {
 
     remove: async(req, res, next) => {
         try {
-            await book.destroy({
+            const response = await book.destroy({
                 where: {
                     idBuku: req.params.id
                 }
             });
+
+            if (response == 0)
+                throw new NotFoundError("Book not found")
 
             return res.status(200).json({
                 success: true,
