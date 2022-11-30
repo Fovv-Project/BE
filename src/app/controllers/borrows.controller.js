@@ -1,3 +1,4 @@
+const { NotFoundError, ForbiddenRresourceError } = require('../../errors/utils/errors.interface.util');
 const db = require('../../utils/db.setup.util')
 const { borrowingHistory } = db.models
 
@@ -76,11 +77,7 @@ module.exports = {
 
     updateStatus: async(req, res, next) => {
         if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
+            throw new ForbiddenRresourceError('Forbidden Resource.')
         try {
             const idHistori = req.params.id;
             const response = await borrowingHistory.update({
@@ -92,11 +89,7 @@ module.exports = {
             });
 
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Borrow history not found"
-                })
+                throw new NotFoundError("Borrow History Not Found")
 
             const getData = await borrowingHistory.findOne({
                 where: {
@@ -118,11 +111,7 @@ module.exports = {
 
     updateApproval: async(req, res, next) => {
         if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
+            throw new ForbiddenRresourceError('Forbidden Resource.')
         try {
             const idHistori = req.params.id;
             const response = await borrowingHistory.update({
@@ -134,11 +123,7 @@ module.exports = {
             });
 
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Borrow history not found"
-                })
+                throw new NotFoundError("Borrow History Not Found")
 
             const getData = await borrowingHistory.findOne({
                 where: {
@@ -166,11 +151,8 @@ module.exports = {
                 }
             });
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Borrow history not found"
-                })
+                throw new NotFoundError("Borrow History Not Found")
+
             return res.status(200).json({
                 success: true,
                 code: 200,

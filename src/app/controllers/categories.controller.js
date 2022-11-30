@@ -1,5 +1,6 @@
 const db = require('../../utils/db.setup.util')
 const { category } = db.models
+const NotFoundError = require('../../errors/classes/sub/notFound.error');
 
 module.exports = {
     get: async(req, res, next) => {
@@ -19,11 +20,7 @@ module.exports = {
 
     insert: async(req, res, next) => {
         if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
+            throw new ForbiddenRresourceError('Forbidden Resource.')
         try {
             const jenisKategori = req.body.jenisKategori
             const response = await category.create({
@@ -44,11 +41,7 @@ module.exports = {
 
     updateId: async(req, res, next) => {
         if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
+            throw new ForbiddenRresourceError('Forbidden Resource.')
         try {
             const idKategori = req.params.id
             const jenisKategori = req.body.jenisKategori;
@@ -62,11 +55,7 @@ module.exports = {
             });
 
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Category not found"
-                })
+                throw new NotFoundError("Category not found")
 
             const getData = await category.findOne({
                 where: {
@@ -88,11 +77,7 @@ module.exports = {
 
     removeId: async(req, res, next) => {
         if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
+            throw new ForbiddenRresourceError('Forbidden Resource.')
         try {
             const response = await category.destroy({
                 where: {
@@ -101,11 +86,7 @@ module.exports = {
             });
 
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Borrow history not found"
-                })
+                throw new NotFoundError("Category not found")
 
             return res.status(200).json({
                 success: true,

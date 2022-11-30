@@ -1,5 +1,6 @@
 const db = require('../../utils/db.setup.util')
 const { book } = db.models
+const { ForbiddenResourceError, NotFoundError } = require('../../errors/utils/errors.interface.util')
 
 module.exports = {
     get: async(req, res, next) => {
@@ -39,11 +40,8 @@ module.exports = {
 
     insert: async(req, res, next) => {
         if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
+            throw new ForbiddenResourceError('Forbidden Resource.')
+
         try {
             const response = await book.create({
                 idBuku: req.body.idBuku,
@@ -71,11 +69,8 @@ module.exports = {
 
     updateId: async(req, res, next) => {
         if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
+            throw new ForbiddenResourceError('Forbidden Resource.')
+
         try {
             const idBuku = req.params.id
             const response = await book.update({
@@ -92,11 +87,7 @@ module.exports = {
             });
 
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Book not found"
-                })
+                throw new NotFoundError("Book not found")
 
             const getData = await book.findOne({
                 where: {
@@ -118,17 +109,17 @@ module.exports = {
 
     remove: async(req, res, next) => {
         if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
+            throw new ForbiddenResourceError('Forbidden Resource.')
+
         try {
-            await book.destroy({
+            const response = await book.destroy({
                 where: {
                     idBuku: req.params.id
                 }
             });
+
+            if (response == 0)
+                throw new NotFoundError("Book not found")
 
             return res.status(200).json({
                 success: true,
