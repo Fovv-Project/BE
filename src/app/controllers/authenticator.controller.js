@@ -1,10 +1,11 @@
 const { genCode } = require('../../utils/authenticator.util')
+const { ForbiddenResourceError } = require('../../errors/utils/errors.interface.util')
 
 module.exports = {
 
     get: async(req, res, next) => {
 
-        try{
+        try {
 
             if (res.locals.userInfo.admin == false)
                 throw new ForbiddenResourceError("Unauthorized access")
@@ -19,12 +20,12 @@ module.exports = {
                 data: hashed_min
             })
 
-        }catch(err){
+        } catch (err) {
 
             next(err)
 
         }
-        
+
     }
 
 }
