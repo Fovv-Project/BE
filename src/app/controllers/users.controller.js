@@ -1,5 +1,6 @@
 const db = require('../../utils/db.setup.util')
 const { user } = db.models
+const { ForbiddenRresourceError } = require('../../errors/utils/errors.interface.util')
 
 module.exports = {
     get: async(req, res, next) => {
@@ -7,11 +8,7 @@ module.exports = {
         try {
 
             if (res.locals.userInfo.admin == false)
-                return res.status(403).json({
-                    success: false,
-                    code: 403,
-                    message: "Forbidden resource"
-                })
+                throw new ForbiddenRresourceError('Forbidden Resource.')
 
             return res.status(200).json({
                 success: true,
@@ -30,9 +27,8 @@ module.exports = {
     getNim: async(req, res, next) => {
 
         try {
-
             const userName = res.locals.userInfo.name
-            const userNim = res.locals.userInfo.nim        
+            const userNim = res.locals.userInfo.nim
             const reqNim = req.params.nim
 
             if (reqNim !== userNim)

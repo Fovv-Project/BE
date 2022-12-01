@@ -1,4 +1,4 @@
-const NotFoundError = require('../../errors/classes/sub/notFound.error');
+const { NotFoundError, ForbiddenRresourceError } = require('../../errors/utils/errors.interface.util');
 const db = require('../../utils/db.setup.util')
 const { borrowingHistory } = db.models
 
@@ -77,11 +77,7 @@ module.exports = {
 
     updateStatus: async(req, res, next) => {
         if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
+            throw new ForbiddenRresourceError('Forbidden Resource.')
         try {
             const idHistori = req.params.id;
             const response = await borrowingHistory.update({
@@ -115,11 +111,7 @@ module.exports = {
 
     updateApproval: async(req, res, next) => {
         if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
+            throw new ForbiddenRresourceError('Forbidden Resource.')
         try {
             const idHistori = req.params.id;
             const response = await borrowingHistory.update({
