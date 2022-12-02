@@ -17,8 +17,7 @@
             "password": "87654321",
             "photoURL": "http://www.example.com/user.png",
             "emailVerified": true,
-            "phoneNumber": "+620987654321",
-            "admin": true
+            "phoneNumber": "+620987654321"
         }
     ]
 }
