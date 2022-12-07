@@ -39,10 +39,10 @@ module.exports = {
     },
 
     insert: async(req, res, next) => {
-        if (res.locals.admin == false)
-            throw new ForbiddenResourceError('Forbidden Resource.')
-
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenResourceError('Forbidden Resource.')
+
             const response = await book.create({
                 idBuku: req.body.idBuku,
                 idKategori: req.body.idKategori,
@@ -67,10 +67,10 @@ module.exports = {
     },
 
     updateId: async(req, res, next) => {
-        if (res.locals.admin == false)
-            throw new ForbiddenResourceError('Forbidden Resource.')
-
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenResourceError('Forbidden Resource.')
+
             const idBuku = req.params.id
             const response = await book.update({
                 judulBuku: req.body.judulBuku,
@@ -107,10 +107,10 @@ module.exports = {
     },
 
     remove: async(req, res, next) => {
-        if (res.locals.admin == false)
-            throw new ForbiddenResourceError('Forbidden Resource.')
-
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenResourceError('Forbidden Resource.')
+
             const response = await book.destroy({
                 where: {
                     idBuku: req.params.id
