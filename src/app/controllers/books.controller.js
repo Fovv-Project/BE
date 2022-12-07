@@ -51,8 +51,7 @@ module.exports = {
                 penerbit: req.body.penerbit,
                 tahunTerbit: req.body.tahunTerbit,
                 jumlahHalaman: req.body.jumlahHalaman,
-                deskripsi: req.body.deskripsi,
-                file: req.files.file
+                deskripsi: req.body.deskripsi
             });
 
             return res.status(201).json({
