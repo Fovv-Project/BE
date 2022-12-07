@@ -19,9 +19,10 @@ module.exports = {
     },
 
     insert: async(req, res, next) => {
-        if (res.locals.admin == false)
-            throw new ForbiddenRresourceError('Forbidden Resource.')
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenRresourceError('Forbidden Resource.')
+
             const jenisKategori = req.body.jenisKategori
             const response = await category.create({
                 jenisKategori: jenisKategori
@@ -40,9 +41,10 @@ module.exports = {
     },
 
     updateId: async(req, res, next) => {
-        if (res.locals.admin == false)
-            throw new ForbiddenRresourceError('Forbidden Resource.')
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenRresourceError('Forbidden Resource.')
+
             const idKategori = req.params.id
             const jenisKategori = req.body.jenisKategori;
 
@@ -76,9 +78,10 @@ module.exports = {
     },
 
     removeId: async(req, res, next) => {
-        if (res.locals.admin == false)
-            throw new ForbiddenRresourceError('Forbidden Resource.')
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenRresourceError('Forbidden Resource.')
+
             const response = await category.destroy({
                 where: {
                     idKategori: req.params.id

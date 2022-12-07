@@ -1,6 +1,7 @@
 const uploadFile = require("../middlewares/upload.middleware");
 const fs = require('fs').promises;
 const { ForbiddenResourceError, NotFoundError } = require('../../errors/utils/errors.interface.util')
+require('dotenv').config()
 
 module.exports = {
     upload: async(req, res, next) => {
@@ -17,7 +18,7 @@ module.exports = {
                 code: 200,
                 message: "Uploaded the file successfully",
                 data: {
-                    url: "http://localhost:3001/file/files/" + req.file.originalname
+                    url: `http://localhost:${process.env.port}/file/download/` + req.file.originalname
                 }
             });
         } catch (err) {
@@ -37,11 +38,10 @@ module.exports = {
 
             files.forEach((file) => {
                 fileInfos.push({
-                    url: "http://localhost:3001/file/files/" + file,
+                    url: `http://localhost:${process.env.port}/file/download/` + file,
                 });
             });
 
-            // console.log(fileInfos)
             return res.status(200).json({
                 success: true,
                 code: 200,
