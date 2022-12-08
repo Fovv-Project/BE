@@ -57,8 +57,27 @@ module.exports = {
 
     insert: async(req, res, next) => {
         try {
+            const getBorrowUser = await borrowingHistory.findAll({
+                where: {
+                    idBuku: req.body.idBuku,
+                    nim: req.body.nim
+                }
+            });
+
+            if (getBorrowUser != null) {
+                getBorrowUser.forEach(borrow => {
+                    if (borrow.statusPinjam == 'Menunggu Approval' || borrow.statusPinjam == 'Sedang Dipinjam')
+                        return res.status(400).json({
+                            success: false,
+                            code: 400,
+                            message: "Failed request! Please waiting for approval or finish the previous borrow"
+                        });
+                });
+            }
+
             const response = await borrowingHistory.create({
                 idBuku: req.body.idBuku,
+                nim: req.body.nim,
                 statusPinjam: "Menunggu Approval",
                 isApproved: false
             });
@@ -76,12 +95,14 @@ module.exports = {
     },
 
     updateStatus: async(req, res, next) => {
-        if (res.locals.admin == false)
-            throw new ForbiddenRresourceError('Forbidden Resource.')
+
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenRresourceError('Forbidden Resource.')
+
             const idHistori = req.params.id;
             const response = await borrowingHistory.update({
-                'statusPinjam': req.body.statusPinjam
+                statusPinjam: req.body.statusPinjam
             }, {
                 where: {
                     idHistori: idHistori
@@ -110,17 +131,31 @@ module.exports = {
     },
 
     updateApproval: async(req, res, next) => {
-        if (res.locals.admin == false)
-            throw new ForbiddenRresourceError('Forbidden Resource.')
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenRresourceError('Forbidden Resource.')
+
             const idHistori = req.params.id;
-            const response = await borrowingHistory.update({
-                'isApproved': true
-            }, {
-                where: {
-                    idHistori: idHistori
-                }
-            });
+            let response;
+            if (req.body.isApproved == false)
+                response = await borrowingHistory.update({
+                    isApproved: req.body.isApproved,
+                    statusPinjam: "Peminjaman Ditolak"
+                }, {
+                    where: {
+                        idHistori: idHistori
+                    }
+                });
+
+            else
+                response = await borrowingHistory.update({
+                    isApproved: req.body.isApproved,
+                    statusPinjam: "Sedang Dipinjam"
+                }, {
+                    where: {
+                        idHistori: idHistori
+                    }
+                });
 
             if (response == 0)
                 throw new NotFoundError("Borrow History Not Found")
@@ -150,6 +185,7 @@ module.exports = {
                     idHistori: req.params.id
                 }
             });
+
             if (response == 0)
                 throw new NotFoundError("Borrow History Not Found")
 
@@ -158,6 +194,7 @@ module.exports = {
                 code: 200,
                 message: "Deleted borrow history successfully",
             });
+
         } catch (error) {
             next(error)
         }
