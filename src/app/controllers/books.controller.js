@@ -1,10 +1,17 @@
 const db = require('../../utils/db.setup.util')
+const { getValidLimit } = require('../../utils/books.util')
 const { book } = db.models
 
 module.exports = {
     get: async(req, res, next) => {
         try {
-            const response = await book.findAll();
+
+            const queryOptions = {
+                ...getValidLimit(req.query.size, req.query.page),
+                ...{order : [['createdAt', 'DESC']]}
+            }
+
+            const response = await book.findAll(queryOptions);
             return res.status(200).json({
                 success: true,
                 code: 200,
@@ -12,6 +19,7 @@ module.exports = {
                 data: response
             });
         } catch (error) {
+            console.error(error);
             return res.status(500).json({
                 success: false,
                 code: 500,
@@ -55,7 +63,8 @@ module.exports = {
                 penerbit: req.body.penerbit,
                 tahunTerbit: req.body.tahunTerbit,
                 jumlahHalaman: req.body.jumlahHalaman,
-                deskripsi: req.body.deskripsi
+                deskripsi: req.body.deskripsi,
+                imgURL: req.body.imgURL
             });
 
             return res.status(201).json({
@@ -83,7 +92,8 @@ module.exports = {
                 penerbit: req.body.penerbit,
                 tahunTerbit: req.body.tahunTerbit,
                 jumlahHalaman: req.body.jumlahHalaman,
-                deskripsi: req.body.deskripsi
+                deskripsi: req.body.deskripsi,
+                imgURL: req.body.imgURL
             }, {
                 where: {
                     idBuku: idBuku
