@@ -64,14 +64,17 @@ module.exports = {
                 }
             });
 
-            getBorrowUser.forEach(async borrow => {
-                if (borrow.statusPinjam == 'Menunggu Approval' || borrow.statusPinjam == 'Sedang Dipinjam')
-                    return res.status(400).json({
-                        success: false,
-                        code: 400,
-                        message: "Failed request! Please waiting for approval or finish the previous borrow"
-                    });
-            });
+            if (getBorrowUser.length != 0) {
+                getBorrowUser.forEach(borrow => {
+                    if (borrow.statusPinjam == 'Menunggu Approval' || borrow.statusPinjam == 'Sedang Dipinjam') {
+                        return res.status(400).json({
+                            success: false,
+                            code: 400,
+                            message: "Failed request! Please waiting for approval or finish the previous borrow"
+                        });
+                    }
+                });
+            }
 
             const response = await borrowingHistory.create({
                 idBuku: req.body.idBuku,
@@ -87,14 +90,12 @@ module.exports = {
                 data: response
             });
 
-
         } catch (error) {
             next(error)
         }
     },
 
     updateStatus: async(req, res, next) => {
-
         try {
             if (res.locals.admin == false)
                 throw new ForbiddenRresourceError('Forbidden Resource.')
