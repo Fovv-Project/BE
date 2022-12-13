@@ -18,7 +18,7 @@ module.exports = {
                 code: 200,
                 message: "Uploaded the file successfully",
                 data: {
-                    url: `http://localhost:${process.env.port}/file/download/` + req.file.originalname
+                    url: req.file.originalname
                 }
             });
         } catch (err) {
@@ -38,7 +38,7 @@ module.exports = {
 
             files.forEach((file) => {
                 fileInfos.push({
-                    url: `http://localhost:${process.env.port}/file/download/` + file,
+                    url: file,
                 });
             });
 
