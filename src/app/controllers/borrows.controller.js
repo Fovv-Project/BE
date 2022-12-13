@@ -1,4 +1,5 @@
 const { NotFoundError, ForbiddenRresourceError } = require('../../errors/utils/errors.interface.util');
+const { ClientError } = require('../../errors/classes/super/client.error')
 const db = require('../../utils/db.setup.util')
 const { borrowingHistory } = db.models
 
@@ -67,14 +68,11 @@ module.exports = {
             if (getBorrowUser.length != 0) {
                 getBorrowUser.forEach(borrow => {
                     if (borrow.statusPinjam == 'Menunggu Approval' || borrow.statusPinjam == 'Sedang Dipinjam') {
-                        return res.status(400).json({
-                            success: false,
-                            code: 400,
-                            message: "Failed request! Please waiting for approval or finish the previous borrow"
-                        });
+                        throw new ClientError('Please waiting for approval or finish the previous borrow')
                     }
                 });
             }
+
 
             const response = await borrowingHistory.create({
                 idBuku: req.body.idBuku,
@@ -101,29 +99,41 @@ module.exports = {
                 throw new ForbiddenRresourceError('Forbidden Resource.')
 
             const idHistori = req.params.id;
-            const response = await borrowingHistory.update({
-                statusPinjam: req.body.statusPinjam
-            }, {
+
+            const getBorrow = await borrowingHistory.findOne({
                 where: {
                     idHistori: idHistori
                 }
             });
 
-            if (response == 0)
-                throw new NotFoundError("Borrow History Not Found")
+            if (getBorrow.statusPinjam != "Sedang Dipinjam") {
+                throw new ClientError("Only allowed borrowing return approval with 'Sedang Dipinjam' status")
 
-            const getData = await borrowingHistory.findOne({
-                where: {
-                    idHistori: idHistori
-                }
-            });
+            } else {
+                const response = await borrowingHistory.update({
+                    statusPinjam: "Telah Dikembalikan"
+                }, {
+                    where: {
+                        idHistori: idHistori
+                    }
+                });
 
-            return res.status(200).json({
-                success: true,
-                code: 200,
-                message: "Updated borrow status successfully",
-                data: getData
-            });
+                if (response == 0)
+                    throw new NotFoundError("Borrow History Not Found")
+
+                const getData = await borrowingHistory.findOne({
+                    where: {
+                        idHistori: idHistori
+                    }
+                });
+
+                return res.status(200).json({
+                    success: true,
+                    code: 200,
+                    message: "Updated borrow status successfully",
+                    data: getData
+                });
+            }
 
         } catch (error) {
             next(error)
@@ -136,42 +146,54 @@ module.exports = {
                 throw new ForbiddenRresourceError('Forbidden Resource.')
 
             const idHistori = req.params.id;
-            let response;
-            if (req.body.isApproved == false)
-                response = await borrowingHistory.update({
-                    isApproved: req.body.isApproved,
-                    statusPinjam: "Peminjaman Ditolak"
-                }, {
-                    where: {
-                        idHistori: idHistori
-                    }
-                });
 
-            else
-                response = await borrowingHistory.update({
-                    isApproved: req.body.isApproved,
-                    statusPinjam: "Sedang Dipinjam"
-                }, {
-                    where: {
-                        idHistori: idHistori
-                    }
-                });
-
-            if (response == 0)
-                throw new NotFoundError("Borrow History Not Found")
-
-            const getData = await borrowingHistory.findOne({
+            const getBorrow = await borrowingHistory.findOne({
                 where: {
                     idHistori: idHistori
                 }
             });
 
-            return res.status(200).json({
-                success: true,
-                code: 200,
-                message: "Updated borrow approval successfully",
-                data: getData
-            });
+            if (getBorrow.statusPinjam != "Menunggu Approval") {
+                throw new ClientError("Only allowed borrowing approval with 'Menunggu Approval' status")
+
+            } else {
+                let response;
+                if (req.body.isApproved == false)
+                    response = await borrowingHistory.update({
+                        isApproved: req.body.isApproved,
+                        statusPinjam: "Peminjaman Ditolak"
+                    }, {
+                        where: {
+                            idHistori: idHistori
+                        }
+                    });
+
+                else
+                    response = await borrowingHistory.update({
+                        isApproved: req.body.isApproved,
+                        statusPinjam: "Sedang Dipinjam"
+                    }, {
+                        where: {
+                            idHistori: idHistori
+                        }
+                    });
+
+                if (response == 0)
+                    throw new NotFoundError("Borrow History Not Found")
+
+                const getData = await borrowingHistory.findOne({
+                    where: {
+                        idHistori: idHistori
+                    }
+                });
+
+                return res.status(200).json({
+                    success: true,
+                    code: 200,
+                    message: "Updated borrow approval successfully",
+                    data: getData
+                });
+            }
 
         } catch (error) {
             next(error)
