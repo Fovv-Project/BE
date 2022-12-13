@@ -180,6 +180,9 @@ module.exports = {
 
     removeId: async(req, res, next) => {
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenRresourceError('Forbidden Resource.')
+
             const response = await borrowingHistory.destroy({
                 where: {
                     idHistori: req.params.id
