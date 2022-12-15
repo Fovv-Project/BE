@@ -15,7 +15,10 @@
 
     "seed:firebase:random": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importRandomUser()'",
     "seed:firebase:base": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importBaseUser()'",
-    "seed:firebase:input": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importUserFromInput()'"
+    "seed:firebase:input": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importUserFromInput()'",
+
+    "seed:books:random": "node -e 'require(\"./src/seeder/db/books.db.seeder.js\").randomSeeder()'",
+    "seed:categories:random": "node -e 'require(\"./src/seeder/db/categories.db.seeder.js\").randomSeeder()'"
   },
   "repository": {
     "type": "git",
