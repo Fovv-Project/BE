@@ -1,15 +1,29 @@
 const db = require('../../utils/db.setup.util')
-const { getValidLimit } = require('../../utils/books.util')
+const { getBatchLimit, getBatchOffset } = require('../../utils/pagination.util')
+const { isInteger } = require('../../utils/helper.util')
 const { book } = db.models
 
 module.exports = {
-    get: async(req, res, next) => {
+    get: async (req, res, next) => {
         try {
 
+            const size = req.query.size
+            const page = req.query.page
+            const category = req.query.category
+
+            const batchLimit = getBatchLimit(size)
+            const batchOffset = getBatchOffset(size, page)
+
             const queryOptions = {
-                ...getValidLimit(req.query.size, req.query.page),
-                ...{order : [['createdAt', 'DESC']]}
+                ...(batchLimit == 0) ? {} : { limit : batchLimit },
+                ...(batchOffset == 0) ? {} : { offset : batchOffset },
+                order: [['createdAt', 'DESC']],
+                where: {
+                    ...isInteger(category) ? { 'idKategori' : category } : {}
+                }
             }
+
+            console.log(queryOptions);
 
             const response = await book.findAll(queryOptions);
             return res.status(200).json({
@@ -29,7 +43,7 @@ module.exports = {
         }
     },
 
-    getId: async(req, res, next) => {
+    getId: async (req, res, next) => {
         try {
             const response = await book.findOne({
                 where: {
@@ -53,7 +67,7 @@ module.exports = {
         }
     },
 
-    insert: async(req, res, next) => {
+    insert: async (req, res, next) => {
         try {
             const response = await book.create({
                 idBuku: req.body.idBuku,
@@ -83,7 +97,7 @@ module.exports = {
         }
     },
 
-    updateId: async(req, res, next) => {
+    updateId: async (req, res, next) => {
         try {
             const idBuku = req.params.id
             const response = await book.update({
@@ -129,7 +143,7 @@ module.exports = {
         }
     },
 
-    remove: async(req, res, next) => {
+    remove: async (req, res, next) => {
         try {
             await book.destroy({
                 where: {
