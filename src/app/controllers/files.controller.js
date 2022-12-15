@@ -18,7 +18,7 @@ module.exports = {
                 code: 200,
                 message: "Uploaded the file successfully",
                 data: {
-                    url: req.file.originalname
+                    fileName: req.file.originalname
                 }
             });
         } catch (err) {
@@ -38,7 +38,7 @@ module.exports = {
 
             files.forEach((file) => {
                 fileInfos.push({
-                    url: file,
+                    fileName: file,
                 });
             });
 
