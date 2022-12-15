@@ -1,11 +1,11 @@
 const { genToken } = require('../../utils/authenticator.util')
-const { ForbiddenResourceError, UnauthorizedError } = require('../../errors/utils/errors.interface.util')
+const { ForbiddenResourceError } = require('../../errors/utils/errors.interface.util')
 
 module.exports = {
 
     get: async(req, res, next) => {
 
-        try{
+        try {
 
             if (res.locals.admin == false)
                 throw new ForbiddenResourceError("Unauthorized access")
@@ -21,12 +21,12 @@ module.exports = {
                 data: token
             })
 
-        }catch(err){
+        } catch (err) {
 
             next(err)
 
         }
-        
+
     }
 
 }

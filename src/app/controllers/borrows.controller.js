@@ -1,3 +1,5 @@
+const { NotFoundError, ForbiddenRresourceError } = require('../../errors/utils/errors.interface.util');
+const { ClientError } = require('../../errors/classes/super/client.error')
 const db = require('../../utils/db.setup.util')
 const { borrowingHistory } = db.models
 
@@ -21,11 +23,7 @@ module.exports = {
                 data: response
             });
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
@@ -54,18 +52,31 @@ module.exports = {
                 data: response
             });
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
     insert: async(req, res, next) => {
         try {
+            const getBorrowUser = await borrowingHistory.findAll({
+                where: {
+                    idBuku: req.body.idBuku,
+                    nim: req.body.nim
+                }
+            });
+
+            if (getBorrowUser.length != 0) {
+                getBorrowUser.forEach(borrow => {
+                    if (borrow.statusPinjam == 'Menunggu Approval' || borrow.statusPinjam == 'Sedang Dipinjam') {
+                        throw new ClientError('Please waiting for approval or finish the previous borrow')
+                    }
+                });
+            }
+
+
             const response = await borrowingHistory.create({
                 idBuku: req.body.idBuku,
+                nim: req.body.nim,
                 statusPinjam: "Menunggu Approval",
                 isApproved: false
             });
@@ -78,130 +89,139 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
     updateStatus: async(req, res, next) => {
-        if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenRresourceError('Forbidden Resource.')
+
             const idHistori = req.params.id;
-            const response = await borrowingHistory.update({
-                'statusPinjam': req.body.statusPinjam
-            }, {
+
+            const getBorrow = await borrowingHistory.findOne({
                 where: {
                     idHistori: idHistori
                 }
             });
 
-            if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Borrow history not found"
-                })
+            if (getBorrow.statusPinjam != "Sedang Dipinjam") {
+                throw new ClientError("Only allowed borrowing return approval with 'Sedang Dipinjam' status")
 
-            const getData = await borrowingHistory.findOne({
-                where: {
-                    idHistori: idHistori
-                }
-            });
+            } else {
+                const response = await borrowingHistory.update({
+                    statusPinjam: "Telah Dikembalikan"
+                }, {
+                    where: {
+                        idHistori: idHistori
+                    }
+                });
 
-            return res.status(200).json({
-                success: true,
-                code: 200,
-                message: "Updated borrow status successfully",
-                data: getData
-            });
+                if (response == 0)
+                    throw new NotFoundError("Borrow History Not Found")
+
+                const getData = await borrowingHistory.findOne({
+                    where: {
+                        idHistori: idHistori
+                    }
+                });
+
+                return res.status(200).json({
+                    success: true,
+                    code: 200,
+                    message: "Updated borrow status successfully",
+                    data: getData
+                });
+            }
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
     updateApproval: async(req, res, next) => {
-        if (res.locals.admin == false)
-            return res.status(403).json({
-                success: false,
-                code: 403,
-                message: "Forbidden resource"
-            })
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenRresourceError('Forbidden Resource.')
+
             const idHistori = req.params.id;
-            const response = await borrowingHistory.update({
-                'isApproved': true
-            }, {
+
+            const getBorrow = await borrowingHistory.findOne({
                 where: {
                     idHistori: idHistori
                 }
             });
 
-            if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Borrow history not found"
-                })
+            if (getBorrow.statusPinjam != "Menunggu Approval") {
+                throw new ClientError("Only allowed borrowing approval with 'Menunggu Approval' status")
 
-            const getData = await borrowingHistory.findOne({
-                where: {
-                    idHistori: idHistori
-                }
-            });
+            } else {
+                let response;
+                if (req.body.isApproved == false)
+                    response = await borrowingHistory.update({
+                        isApproved: req.body.isApproved,
+                        statusPinjam: "Peminjaman Ditolak"
+                    }, {
+                        where: {
+                            idHistori: idHistori
+                        }
+                    });
 
-            return res.status(200).json({
-                success: true,
-                code: 200,
-                message: "Updated borrow approval successfully",
-                data: getData
-            });
+                else
+                    response = await borrowingHistory.update({
+                        isApproved: req.body.isApproved,
+                        statusPinjam: "Sedang Dipinjam"
+                    }, {
+                        where: {
+                            idHistori: idHistori
+                        }
+                    });
+
+                if (response == 0)
+                    throw new NotFoundError("Borrow History Not Found")
+
+                const getData = await borrowingHistory.findOne({
+                    where: {
+                        idHistori: idHistori
+                    }
+                });
+
+                return res.status(200).json({
+                    success: true,
+                    code: 200,
+                    message: "Updated borrow approval successfully",
+                    data: getData
+                });
+            }
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
     removeId: async(req, res, next) => {
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenRresourceError('Forbidden Resource.')
+
             const response = await borrowingHistory.destroy({
                 where: {
                     idHistori: req.params.id
                 }
             });
+
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Borrow history not found"
-                })
+                throw new NotFoundError("Borrow History Not Found")
+
             return res.status(200).json({
                 success: true,
                 code: 200,
                 message: "Deleted borrow history successfully",
             });
+
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 }

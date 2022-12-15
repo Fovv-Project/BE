@@ -1,50 +1,50 @@
 {
-  "name": "be",
-  "version": "1.0.0",
-  "description": "Back-End services for \"librarian-ilkom\" app.",
-  "main": "./src/index.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "start": "nodemon src/app/app.js",
-    "test": "mocha test/**/*.js",
-    "migrate": "node-pg-migrate",
-
-    "docker:db": "docker compose down; docker compose up -d; sleep 2; npm run migrate up;",
-
-    "seed:firebase:random": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importRandomUser()'",
-    "seed:firebase:base": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importBaseUser()'",
-    "seed:firebase:input": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importUserFromInput()'",
-
-    "seed:books:random": "node -e 'require(\"./src/seeder/db/books.db.seeder.js\").randomSeeder()'",
-    "seed:categories:random": "node -e 'require(\"./src/seeder/db/categories.db.seeder.js\").randomSeeder()'"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/librarian-ilkom/BE.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/librarian-ilkom/BE/issues"
-  },
-  "homepage": "https://github.com/librarian-ilkom/BE#readme",
-  "devDependencies": {
-    "bcrypt": "^5.1.0",
-    "chai": "^4.3.6",
-    "mocha": "^10.0.0",
-    "node-pg-migrate": "^6.2.2",
-    "nodemon": "^2.0.20",
-    "prompt-sync": "^4.2.0",
-    "supertest": "^6.2.4"
-  },
-  "dependencies": {
-    "dotenv": "^16.0.2",
-    "express": "^4.18.1",
-    "firebase-admin": "^11.0.1",
-    "pg": "^8.8.0",
-    "pg-hstore": "^2.3.4",
-    "sequelize": "^6.25.3"
-  }
+    "name": "be",
+    "version": "1.0.0",
+    "description": "Back-End services for \"librarian-ilkom\" app.",
+    "main": "./src/index.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "start": "nodemon src/app/app.js",
+        "test": "mocha test/**/*.js",
+        "migrate": "node-pg-migrate",
+        "docker:db": "docker compose down; docker compose up -d; sleep 2; npm run migrate up;",
+        "seed:firebase:random": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importRandomUser()'",
+        "seed:firebase:base": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importBaseUser()'",
+        "seed:firebase:input": "node -e 'require(\"./src/seeder/firebase/user.firebase.seeder.js\").importUserFromInput()'",
+        "seed:books:random": "node -e 'require(\"./src/seeder/db/books.db.seeder.js\").randomSeeder()'",
+        "seed:categories:random": "node -e 'require(\"./src/seeder/db/categories.db.seeder.js\").randomSeeder()'"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/librarian-ilkom/BE.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/librarian-ilkom/BE/issues"
+    },
+    "homepage": "https://github.com/librarian-ilkom/BE#readme",
+    "devDependencies": {
+        "bcrypt": "^5.1.0",
+        "chai": "^4.3.6",
+        "mocha": "^10.0.0",
+        "node-pg-migrate": "^6.2.2",
+        "nodemon": "^2.0.20",
+        "prompt-sync": "^4.2.0",
+        "supertest": "^6.2.4"
+    },
+    "dependencies": {
+        "dotenv": "^16.0.2",
+        "express": "^4.18.1",
+        "express-winston": "^4.2.0",
+        "firebase-admin": "^11.0.1",
+        "multer": "^1.4.5-lts.1",
+        "pg": "^8.8.0",
+        "pg-hstore": "^2.3.4",
+        "sequelize": "^6.25.3",
+        "winston": "^3.8.2"
+    }
 }

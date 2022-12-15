@@ -57,8 +57,7 @@ exports.up = pgm => {
             },
             updatedAt: {
                 type: 'timestamp',
-                notNull: false,
-                default: pgm.func('current_timestamp')
+                notNull: false
             },
             deletedAt: {
                 type: 'timestamp',
@@ -153,8 +152,7 @@ exports.up = pgm => {
             },
             updatedAt: {
                 type: 'timestamp',
-                notNull: false,
-                default: pgm.func('current_timestamp')
+                notNull: false
             },
             deletedAt: {
                 type: 'timestamp',

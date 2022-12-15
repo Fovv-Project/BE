@@ -18,7 +18,7 @@ router.patch('/:id', [
     authMiddleware,
     booksController.updateId
 ])
-router.delete('/', [
+router.delete('/:id', [
     authMiddleware,
     booksController.remove
 ])

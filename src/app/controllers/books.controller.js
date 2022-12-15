@@ -2,6 +2,7 @@ const db = require('../../utils/db.setup.util')
 const { getBatchLimit, getBatchOffset } = require('../../utils/pagination.util')
 const { isInteger } = require('../../utils/helper.util')
 const { book } = db.models
+const { ForbiddenResourceError, NotFoundError } = require('../../errors/utils/errors.interface.util')
 
 module.exports = {
     get: async (req, res, next) => {
@@ -33,13 +34,7 @@ module.exports = {
                 data: response
             });
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: "Internal server error"
-            })
-
+            next(error)
         }
     },
 
@@ -59,16 +54,15 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
     insert: async (req, res, next) => {
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenResourceError('Forbidden Resource.')
+
             const response = await book.create({
                 idBuku: req.body.idBuku,
                 idKategori: req.body.idKategori,
@@ -89,16 +83,15 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
     updateId: async (req, res, next) => {
         try {
+            if (res.locals.admin == false)
+                throw new ForbiddenResourceError('Forbidden Resource.')
+
             const idBuku = req.params.id
             const response = await book.update({
                 judulBuku: req.body.judulBuku,
@@ -115,11 +108,7 @@ module.exports = {
             });
 
             if (response == 0)
-                return res.status(404).json({
-                    success: false,
-                    code: 404,
-                    message: "Book not found"
-                })
+                throw new NotFoundError("Book not found")
 
             const getData = await book.findOne({
                 where: {
@@ -135,21 +124,23 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 
     remove: async (req, res, next) => {
         try {
-            await book.destroy({
+            if (res.locals.admin == false)
+                throw new ForbiddenResourceError('Forbidden Resource.')
+
+            const response = await book.destroy({
                 where: {
                     idBuku: req.params.id
                 }
             });
+
+            if (response == 0)
+                throw new NotFoundError("Book not found")
 
             return res.status(200).json({
                 success: true,
@@ -158,11 +149,7 @@ module.exports = {
             });
 
         } catch (error) {
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: error.message
-            })
+            next(error)
         }
     },
 }

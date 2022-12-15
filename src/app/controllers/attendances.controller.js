@@ -4,9 +4,9 @@ const { attendance } = db.models
 const { genToken } = require('../../utils/authenticator.util')
 
 module.exports = {
-    get: async (req, res, next) => {
+    get: async(req, res, next) => {
         try {
-            
+
             const userNim = res.locals.userInfo.nim
             
             if (res.locals.admin == true)
@@ -22,8 +22,8 @@ module.exports = {
                     code: 200,
                     message: `Get attendances record for user with NIM:${userNim} successfully`,
                     data: await attendance.findAll({
-                        where : {
-                            nim : userNim
+                        where: {
+                            nim: userNim
                         }
                     })
                 });
@@ -33,8 +33,8 @@ module.exports = {
         }
     },
 
-    getId: async (req, res, next) => {
-        
+    getId: async(req, res, next) => {
+
         try {
 
             return res.status(200).json({
@@ -47,16 +47,16 @@ module.exports = {
                     }
                 })
             });
-            
+
         } catch (err) {
             next(err)
         }
 
     },
 
-    insert: async (req, res, next) => {
+    insert: async(req, res, next) => {
 
-        try{
+        try {
 
             const sentToken = parseInt(req.body.token)
         
@@ -66,7 +66,7 @@ module.exports = {
             const lastMin = curMin - 1
             const lastMinToken = genToken(lastMin.toString())
 
-            if(sentToken !== curToken && sentToken !== lastMinToken)
+            if (sentToken !== curToken && sentToken !== lastMinToken)
                 throw new Error("Invalid Token")
 
             const userNim = res.locals.userInfo.nim
@@ -75,11 +75,11 @@ module.exports = {
                 code: 200,
                 message: `Successfully inserted attendance`,
                 data: await attendance.create({
-                    nim : userNim
+                    nim: userNim
                 })
             })
 
-        }catch(err){
+        } catch (err) {
             next(err)
         }
     },
