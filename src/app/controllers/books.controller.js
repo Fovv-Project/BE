@@ -1,11 +1,26 @@
 const db = require('../../utils/db.setup.util')
 const { book } = db.models
-const { ForbiddenResourceError, NotFoundError } = require('../../errors/utils/errors.interface.util')
+const { ForbiddenResourceError, NotFoundError } = require('../../errors/utils/errors.interface.util');
 
 module.exports = {
     get: async(req, res, next) => {
         try {
-            const response = await book.findAll();
+            let response;
+            search = req.query.search;
+
+            if (typeof search == undefined) {
+                response = await book.findAll();
+
+            } else {
+                response = await book.findAll({
+                    where: {
+                        judulBuku: {
+                            [db.Sequelize.Op.iLike]: `%${search}%`,
+                        }
+                    }
+                });
+            }
+
             return res.status(200).json({
                 success: true,
                 code: 200,
