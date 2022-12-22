@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const booksController = require('../controllers/books.controller')
+const authMiddleware = require('../middlewares/auth.middleware')
 
 /* Middleware */
 router.use(require('../middlewares/logger.middleware'))
@@ -10,13 +11,16 @@ router.get('/', booksController.get)
 router.get('/:id', booksController.getId)
 
 router.post('/', [
-    require('../middlewares/auth.middleware'),
-], booksController.insert)
+    authMiddleware,
+    booksController.insert
+])
 router.patch('/:id', [
-    require('../middlewares/auth.middleware'),
-], booksController.updateId)
+    authMiddleware,
+    booksController.updateId
+])
 router.delete('/:id', [
-    require('../middlewares/auth.middleware'),
-], booksController.remove)
+    authMiddleware,
+    booksController.remove
+])
 
 module.exports = router

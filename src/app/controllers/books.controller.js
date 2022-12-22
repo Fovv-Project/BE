@@ -1,11 +1,32 @@
 const db = require('../../utils/db.setup.util')
+const { getBatchLimit, getBatchOffset } = require('../../utils/pagination.util')
+const { isInteger } = require('../../utils/helper.util')
 const { book } = db.models
 const { ForbiddenResourceError, NotFoundError } = require('../../errors/utils/errors.interface.util')
 
 module.exports = {
-    get: async(req, res, next) => {
+    get: async (req, res, next) => {
         try {
-            const response = await book.findAll();
+
+            const size = req.query.size
+            const page = req.query.page
+            const category = req.query.category
+
+            const batchLimit = getBatchLimit(size)
+            const batchOffset = getBatchOffset(size, page)
+
+            const queryOptions = {
+                ...(batchLimit == 0) ? {} : { limit : batchLimit },
+                ...(batchOffset == 0) ? {} : { offset : batchOffset },
+                order: [['createdAt', 'DESC']],
+                where: {
+                    ...isInteger(category) ? { 'idKategori' : category } : {}
+                }
+            }
+
+            console.log(queryOptions);
+
+            const response = await book.findAll(queryOptions);
             return res.status(200).json({
                 success: true,
                 code: 200,
@@ -14,11 +35,10 @@ module.exports = {
             });
         } catch (error) {
             next(error)
-
         }
     },
 
-    getId: async(req, res, next) => {
+    getId: async (req, res, next) => {
         try {
             const response = await book.findOne({
                 where: {
@@ -38,7 +58,7 @@ module.exports = {
         }
     },
 
-    insert: async(req, res, next) => {
+    insert: async (req, res, next) => {
         try {
             if (res.locals.admin == false)
                 throw new ForbiddenResourceError('Forbidden Resource.')
@@ -51,7 +71,8 @@ module.exports = {
                 penerbit: req.body.penerbit,
                 tahunTerbit: req.body.tahunTerbit,
                 jumlahHalaman: req.body.jumlahHalaman,
-                deskripsi: req.body.deskripsi
+                deskripsi: req.body.deskripsi,
+                imgURL: req.body.imgURL
             });
 
             return res.status(201).json({
@@ -66,7 +87,7 @@ module.exports = {
         }
     },
 
-    updateId: async(req, res, next) => {
+    updateId: async (req, res, next) => {
         try {
             if (res.locals.admin == false)
                 throw new ForbiddenResourceError('Forbidden Resource.')
@@ -78,7 +99,8 @@ module.exports = {
                 penerbit: req.body.penerbit,
                 tahunTerbit: req.body.tahunTerbit,
                 jumlahHalaman: req.body.jumlahHalaman,
-                deskripsi: req.body.deskripsi
+                deskripsi: req.body.deskripsi,
+                imgURL: req.body.imgURL
             }, {
                 where: {
                     idBuku: idBuku
@@ -106,7 +128,7 @@ module.exports = {
         }
     },
 
-    remove: async(req, res, next) => {
+    remove: async (req, res, next) => {
         try {
             if (res.locals.admin == false)
                 throw new ForbiddenResourceError('Forbidden Resource.')
