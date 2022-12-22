@@ -2,10 +2,10 @@ const db = require('../../utils/db.setup.util')
 const { getBatchLimit, getBatchOffset } = require('../../utils/pagination.util')
 const { isInteger } = require('../../utils/helper.util')
 const { book } = db.models
-const { ForbiddenResourceError, NotFoundError } = require('../../errors/utils/errors.interface.util')
+const { ForbiddenResourceError, NotFoundError } = require('../../errors/utils/errors.interface.util');
 
 module.exports = {
-    get: async (req, res, next) => {
+    get: async(req, res, next) => {
         try {
 
             const size = req.query.size
@@ -16,29 +16,47 @@ module.exports = {
             const batchOffset = getBatchOffset(size, page)
 
             const queryOptions = {
-                ...(batchLimit == 0) ? {} : { limit : batchLimit },
-                ...(batchOffset == 0) ? {} : { offset : batchOffset },
-                order: [['createdAt', 'DESC']],
+                ...(batchLimit == 0) ? {} : { limit: batchLimit },
+                ...(batchOffset == 0) ? {} : { offset: batchOffset },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
                 where: {
-                    ...isInteger(category) ? { 'idKategori' : category } : {}
+                    ...isInteger(category) ? { 'idKategori': category } : {}
                 }
             }
 
             console.log(queryOptions);
 
-            const response = await book.findAll(queryOptions);
+            let response;
+            const search = req.query.search;
+
+            if (typeof search == undefined) {
+                response = await book.findAll(queryOptions);
+
+            } else {
+                response = await book.findAll(queryOptions, {
+                    where: {
+                        judulBuku: {
+                            [db.Sequelize.Op.iLike]: `%${search}%`,
+                        }
+                    }
+                });
+            }
+
             return res.status(200).json({
                 success: true,
                 code: 200,
                 message: "Get all books successfully",
                 data: response
             });
+
         } catch (error) {
             next(error)
         }
     },
 
-    getId: async (req, res, next) => {
+    getId: async(req, res, next) => {
         try {
             const response = await book.findOne({
                 where: {
@@ -58,7 +76,7 @@ module.exports = {
         }
     },
 
-    insert: async (req, res, next) => {
+    insert: async(req, res, next) => {
         try {
             if (res.locals.admin == false)
                 throw new ForbiddenResourceError('Forbidden Resource.')
@@ -87,7 +105,7 @@ module.exports = {
         }
     },
 
-    updateId: async (req, res, next) => {
+    updateId: async(req, res, next) => {
         try {
             if (res.locals.admin == false)
                 throw new ForbiddenResourceError('Forbidden Resource.')
@@ -128,7 +146,7 @@ module.exports = {
         }
     },
 
-    remove: async (req, res, next) => {
+    remove: async(req, res, next) => {
         try {
             if (res.locals.admin == false)
                 throw new ForbiddenResourceError('Forbidden Resource.')
