@@ -28,13 +28,29 @@ module.exports = {
 
             console.log(queryOptions);
 
-            const response = await book.findAll(queryOptions);
+            let response;
+            const search = req.query.search;
+
+            if (typeof search == undefined) {
+                response = await book.findAll(queryOptions);
+
+            } else {
+                response = await book.findAll(queryOptions, {
+                    where: {
+                        judulBuku: {
+                            [db.Sequelize.Op.iLike]: `%${search}%`,
+                        }
+                    }
+                });
+            }
+
             return res.status(200).json({
                 success: true,
                 code: 200,
                 message: "Get all books successfully",
                 data: response
             });
+
         } catch (error) {
             next(error)
         }
