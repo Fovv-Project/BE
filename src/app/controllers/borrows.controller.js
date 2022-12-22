@@ -1,15 +1,48 @@
 const { NotFoundError, ForbiddenRresourceError } = require('../../errors/utils/errors.interface.util');
 const { ClientError } = require('../../errors/classes/super/client.error')
 const db = require('../../utils/db.setup.util')
-const { borrowingHistory } = db.models
+const { borrowingHistory, book, user } = db.models
+const { getBatchLimit, getBatchOffset } = require('../../utils/pagination.util')
 
 module.exports = {
     get: async(req, res, next) => {
         try {
+            const size = req.query.size
+            const page = req.query.page
+            const nim = req.query.nim
+            const status = req.query.status
+            const batchLimit = getBatchLimit(size)
+            const batchOffset = getBatchOffset(size, page)
+
+            const queryOptions = {
+                ...(batchLimit == 0) ? {} : { limit: batchLimit },
+                ...(batchOffset == 0) ? {} : { offset: batchOffset },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                include: [{
+                        model: book,
+                    },
+                    {
+                        model: user,
+                        attributes: [
+                            'nim',
+                            'nama'
+                        ],
+                        where: {
+                            nim: nim
+                        }
+                    }
+                ],
+                where: {
+                    statusPinjam: status,
+                }
+            }
             let response;
             if (res.locals.admin == true) {
-                response = await borrowingHistory.findAll();
+                response = await borrowingHistory.findAll(queryOptions);
             } else if (res.locals.userInfo.nim == borrowingHistory.nim) {
+                console.log()
                 response = await borrowingHistory.findAll({
                     where: {
                         nim: res.locals.userInfo.nim
