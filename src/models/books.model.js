@@ -42,6 +42,10 @@ module.exports = (sequelize) => {
         deletedAt: {
             allowNull: true,
             type: DataTypes.TIME
+        },
+        imgURL: {
+            allowNull: false,
+            type: DataTypes.STRING
         }
     });
 }
