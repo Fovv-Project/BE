@@ -11,10 +11,11 @@ module.exports = {
             const size = req.query.size
             const page = req.query.page
             const category = req.query.category
+            const search = req.query.search
 
             const batchLimit = getBatchLimit(size)
             const batchOffset = getBatchOffset(size, page)
-
+            console.log(search)
             const queryOptions = {
                 ...(batchLimit == 0) ? {} : { limit: batchLimit },
                 ...(batchOffset == 0) ? {} : { offset: batchOffset },
@@ -22,28 +23,18 @@ module.exports = {
                     ['createdAt', 'DESC']
                 ],
                 where: {
-                    ...isInteger(category) ? { 'idKategori': category } : {}
+                    ...isInteger(category) ? { 'idKategori': category } : {},
+                    ...search ? {
+                        'judulBuku': {
+                            [db.Sequelize.Op.iLike]: `%${search}%`
+                        }
+                    } : {}
                 }
             }
 
             console.log(queryOptions);
 
-            let response;
-            const search = req.query.search;
-
-            if (typeof search == undefined) {
-                response = await book.findAll(queryOptions);
-
-            } else {
-                response = await book.findAll(queryOptions, {
-                    where: {
-                        judulBuku: {
-                            [db.Sequelize.Op.iLike]: `%${search}%`,
-                        }
-                    }
-                });
-            }
-
+            const response = await book.findAll(queryOptions);
             return res.status(200).json({
                 success: true,
                 code: 200,
