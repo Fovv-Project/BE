@@ -36,5 +36,7 @@ module.exports = (sequelize) => {
             allowNull: true,
             type: DataTypes.TIME
         }
+    }, {
+        freezeTableName: true
     });
 }
