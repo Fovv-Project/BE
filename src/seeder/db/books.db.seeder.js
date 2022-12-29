@@ -15,8 +15,8 @@ module.exports = {
 
         for (let index = 0; index < totalRecords; index++) {
             
-            const randomCategory = categoryRecords[rangedRandomInt(0, categoryRecords.length)]
-            const categoryId = randomCategory.toJSON().idKategori
+            const randomCategory = categoryRecords[rangedRandomInt(0, categoryRecords.length-1)]
+            const categoryId = randomCategory.idKategori
             const id  = getRandom("number", 15)
             
             book.create({
