@@ -105,3 +105,6 @@ dist
 
 # Firebase service account
 firebase.config.json
+
+# MacOS desktop service store
+.DS_Store
