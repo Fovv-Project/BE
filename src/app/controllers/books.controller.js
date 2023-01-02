@@ -15,7 +15,6 @@ module.exports = {
 
             const batchLimit = getBatchLimit(size)
             const batchOffset = getBatchOffset(size, page)
-            console.log(search)
             const queryOptions = {
                 ...(batchLimit == 0) ? {} : { limit: batchLimit },
                 ...(batchOffset == 0) ? {} : { offset: batchOffset },
