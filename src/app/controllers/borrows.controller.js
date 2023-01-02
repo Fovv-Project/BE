@@ -28,14 +28,12 @@ module.exports = {
                         attributes: [
                             'nim',
                             'nama'
-                        ],
-                        where: {
-                            nim: nim
-                        }
+                        ]
                     }
                 ],
                 where: {
-                    statusPinjam: status,
+                    ...(nim == '') ? {} : { nim: nim },
+                    ...(status == '') ? {} : { statusPinjam: status },
                 }
             }
             let response;
