@@ -1,8 +1,11 @@
 const { NotFoundError, ForbiddenRresourceError } = require('../../errors/utils/errors.interface.util');
 const { ClientError } = require('../../errors/classes/super/client.error')
 const db = require('../../utils/db.setup.util')
-const { borrowingHistory, book, user } = db.models
-const { getBatchLimit, getBatchOffset } = require('../../utils/pagination.util')
+const { borrowingHistory, book, user, attendance } = db.models
+const { getBatchLimit, getBatchOffset } = require('../../utils/pagination.util');
+const attendancesModel = require('../../models/attendances.model');
+const date = new Date()
+const moment = require('moment');
 
 module.exports = {
     get: async(req, res, next) => {
@@ -28,14 +31,12 @@ module.exports = {
                         attributes: [
                             'nim',
                             'nama'
-                        ],
-                        where: {
-                            nim: nim
-                        }
+                        ]
                     }
                 ],
                 where: {
-                    statusPinjam: status,
+                    ...nim ? { nim: nim } : {},
+                    ...status ? { statusPinjam: status } : {},
                 }
             }
             let response;
@@ -91,28 +92,45 @@ module.exports = {
 
     insert: async(req, res, next) => {
         try {
-            const getBorrowUser = await borrowingHistory.findAll({
+            const nim = req.body.nim
+            const TODAY_START = moment().format('YYYY-MM-DD 00:00');
+            const TODAY_END = moment().format('YYYY-MM-DD 23:59');
+            const todaysAttandance = await attendance.findOne({
                 where: {
-                    idBuku: req.body.idBuku,
-                    nim: req.body.nim
+                    nim: nim,
+                    waktuAbsen: {
+                        [db.Sequelize.Op.between]: [
+                            TODAY_START,
+                            TODAY_END,
+                        ]
+                    }
                 }
-            });
+            })
 
-            if (getBorrowUser.length != 0) {
-                getBorrowUser.forEach(borrow => {
-                    if (borrow.statusPinjam == 'Menunggu Approval' || borrow.statusPinjam == 'Sedang Dipinjam') {
-                        throw new ClientError('Please waiting for approval or finish the previous borrow')
+            if (todaysAttandance != null) {
+                const getBorrowUser = await borrowingHistory.findAll({
+                    where: {
+                        idBuku: req.body.idBuku,
+                        nim: nim
                     }
                 });
+
+                if (getBorrowUser.length != 0) {
+                    getBorrowUser.forEach(borrow => {
+                        if (borrow.statusPinjam == 'Menunggu Approval' || borrow.statusPinjam == 'Sedang Dipinjam') {
+                            throw new ClientError('Please waiting for approval or finish the previous borrow')
+                        }
+                    });
+                }
+                response = await borrowingHistory.create({
+                    idBuku: req.body.idBuku,
+                    nim: req.body.nim,
+                    statusPinjam: "Menunggu Approval",
+                    isApproved: false
+                });
+            } else {
+                throw new ClientError("Anda harus absen untuk meminjam buku!")
             }
-
-
-            const response = await borrowingHistory.create({
-                idBuku: req.body.idBuku,
-                nim: req.body.nim,
-                statusPinjam: "Menunggu Approval",
-                isApproved: false
-            });
 
             return res.status(201).json({
                 success: true,

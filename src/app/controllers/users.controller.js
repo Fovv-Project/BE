@@ -18,7 +18,7 @@ module.exports = {
             });
 
         } catch (err) {
-            next(error)
+            next(err)
 
         }
 
@@ -32,11 +32,7 @@ module.exports = {
             const reqNim = req.params.nim
 
             if (reqNim !== userNim)
-                return res.status(403).json({
-                    success: false,
-                    code: 403,
-                    message: "Forbidden resource"
-                })
+                throw new ForbiddenRresourceError('Forbidden Resource.')
 
             const [userRecord, isInserted] = await user.findOrCreate({
                 where: { nim: userNim },
@@ -54,12 +50,7 @@ module.exports = {
             })
 
         } catch (err) {
-
-            return res.status(500).json({
-                success: false,
-                code: 500,
-                message: err.message
-            })
+            next(err)
 
         }
 
