@@ -1,6 +1,7 @@
 const uploadFile = require("../middlewares/upload.middleware");
 const fs = require('fs').promises;
 const { ForbiddenResourceError, NotFoundError } = require('../../errors/utils/errors.interface.util')
+const { ClientError } = require('../../errors/classes/super/client.error')
 require('dotenv').config()
 
 module.exports = {
@@ -62,9 +63,7 @@ module.exports = {
 
             res.download(directoryPath + fileName, fileName, (err) => {
                 if (err) {
-                    res.status(500).send({
-                        message: "Could not download the file. " + err,
-                    });
+                    throw new ClientError('Couldnt download the file ' + err)
                 }
             });
 
